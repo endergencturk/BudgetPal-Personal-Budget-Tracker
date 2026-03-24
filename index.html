@@ -773,38 +773,38 @@
       <div class="brand"><span>Bütçe</span>Dostu</div>
 
       <div class="menu-card">
-        <div class="menu-title">Aktif Kullanıcılar</div>
+        <div class="menu-title" data-i18n="activeUsersTitle">Aktif Kullanıcılar</div>
         <div id="userList"></div>
       </div>
 
       <div class="menu-card">
-        <div class="menu-title">Yeni Kullanıcı</div>
-        <input id="newUserName" type="text" placeholder="İsim gir" />
-        <button class="save-btn" style="margin-top:10px;" onclick="addUser()">Kullanıcı Ekle</button>
+        <div class="menu-title" data-i18n="newUserTitle">Yeni Kullanıcı</div>
+        <input id="newUserName" type="text" data-i18n-placeholder="newUserPlaceholder" placeholder="İsim gir" />
+        <button class="save-btn" style="margin-top:10px;" onclick="addUser()" data-i18n="addUserBtn">Kullanıcı Ekle</button>
       </div>
 
       <div class="menu-card">
-        <div class="menu-title">Aktif Kullanıcıyı Düzenle</div>
-        <input id="editUserName" type="text" placeholder="Yeni isim gir" />
+        <div class="menu-title" data-i18n="editActiveUserTitle">Aktif Kullanıcıyı Düzenle</div>
+        <input id="editUserName" type="text" data-i18n-placeholder="editUserPlaceholder" placeholder="Yeni isim gir" />
         <div class="sidebar-action-row">
-          <button class="muted-btn" onclick="renameActiveUser()">İsmi Güncelle</button>
-          <button class="danger-btn" onclick="deleteActiveUser()">Kullanıcıyı Sil</button>
+          <button class="muted-btn" onclick="renameActiveUser()" data-i18n="updateNameBtn">İsmi Güncelle</button>
+          <button class="danger-btn" onclick="deleteActiveUser()" data-i18n="deleteUserBtn">Kullanıcıyı Sil</button>
         </div>
       </div>
 
       <div class="menu-card">
-        <div class="menu-title">Yedek</div>
+        <div class="menu-title" data-i18n="backupTitle">Yedek</div>
         <div class="sidebar-action-row">
-          <button class="muted-btn" onclick="exportData()">JSON İndir</button>
-          <button class="muted-btn" onclick="exportCSV()">CSV İndir</button>
-          <button class="muted-btn" onclick="document.getElementById('importFile').click()">Yedek Yükle</button>
+          <button class="muted-btn" onclick="exportData()" data-i18n="jsonDownloadBtn">JSON İndir</button>
+          <button class="muted-btn" onclick="exportCSV()" data-i18n="csvDownloadBtn">CSV İndir</button>
+          <button class="muted-btn" onclick="document.getElementById('importFile').click()" data-i18n="loadBackupBtn">Yedek Yükle</button>
           <input id="importFile" type="file" accept=".json" style="display:none;" />
         </div>
       </div>
 
       <div class="menu-card">
-        <div class="menu-title">Bilgi</div>
-        <div class="small">Export işlemleri yalnızca seçili ayın aktif kullanıcı verisini indirir.</div>
+        <div class="menu-title" data-i18n="infoTitle">Bilgi</div>
+        <div class="small" data-i18n="infoText">Export işlemleri yalnızca seçili ayın aktif kullanıcı verisini indirir.</div>
       </div>
     </aside>
 
@@ -812,15 +812,16 @@
       <div class="shell">
         <div class="topbar">
           <div class="title-wrap">
-            <h1>Bütçe Takip</h1>
-            <p>Gelir ve giderlerini daha düzenli takip et</p>
+            <h1 data-i18n="appTitle">Bütçe Takip</h1>
+            <p data-i18n="appSubtitle">Gelir ve giderlerini daha düzenli takip et</p>
           </div>
 
           <div class="toolbar-row">
+            <button class="light-btn" onclick="toggleLanguage()" id="langToggleBtn">EN</button>
             <button class="light-btn" onclick="toggleDarkMode()" id="themeToggleBtn">🌙 Dark</button>
-            <button class="blue-btn" onclick="exportData()">JSON Export</button>
-            <button class="light-btn" onclick="exportCSV()">CSV Export</button>
-            <button class="light-btn" onclick="document.getElementById('importFile').click()">Import</button>
+            <button class="blue-btn" onclick="exportData()" data-i18n="jsonExportBtn">JSON Export</button>
+            <button class="light-btn" onclick="exportCSV()" data-i18n="csvExportBtn">CSV Export</button>
+            <button class="light-btn" onclick="document.getElementById('importFile').click()" data-i18n="importBtn">Import</button>
 
             <div class="month-box">
               <button onclick="changeMonth(-1)">‹</button>
@@ -832,36 +833,36 @@
 
         <section class="stats">
           <div class="stat-card dark">
-            <div class="stat-label">Toplam Varlık</div>
+            <div class="stat-label" data-i18n="totalAssets">Toplam Varlık</div>
             <div class="stat-value" id="totalBalance">0 TL</div>
           </div>
 
           <div class="stat-card">
-            <div class="stat-label">Aylık Gelir</div>
+            <div class="stat-label" data-i18n="monthlyIncome">Aylık Gelir</div>
             <div class="stat-value" id="monthlyIncome">0 TL</div>
           </div>
 
           <div class="stat-card">
-            <div class="stat-label">Aylık Gider</div>
+            <div class="stat-label" data-i18n="monthlyExpense">Aylık Gider</div>
             <div class="stat-value" id="monthlyExpense">0 TL</div>
           </div>
         </section>
 
         <section class="insight-stats">
           <div class="stat-card">
-            <div class="stat-label">Geçen Aya Göre Gider</div>
+            <div class="stat-label" data-i18n="expenseVsLastMonth">Geçen Aya Göre Gider</div>
             <div class="stat-value" id="expenseChangeValue">-</div>
             <div class="stat-sub" id="expenseChangeText">Karşılaştırma yok</div>
           </div>
 
           <div class="stat-card">
-            <div class="stat-label">En Çok Harcanan Kategori</div>
+            <div class="stat-label" data-i18n="topCategory">En Çok Harcanan Kategori</div>
             <div class="stat-value" id="topCategoryValue">-</div>
             <div class="stat-sub" id="topCategoryText">Veri yok</div>
           </div>
 
           <div class="stat-card">
-            <div class="stat-label">Tasarruf Oranı</div>
+            <div class="stat-label" data-i18n="savingRate">Tasarruf Oranı</div>
             <div class="stat-value" id="savingRateValue">0%</div>
             <div class="stat-sub" id="savingRateText">Gelir girildiğinde hesaplanır</div>
           </div>
@@ -869,74 +870,74 @@
 
         <section class="layout">
           <div class="card">
-            <h2 class="card-title">Yeni İşlem Ekle</h2>
-            <div class="subtle">Aktif kullanıcı: <strong id="activeUserLabel">-</strong></div>
+            <h2 class="card-title" data-i18n="newTransaction">Yeni İşlem Ekle</h2>
+            <div class="subtle"><span data-i18n="activeUserLabel">Aktif kullanıcı:</span> <strong id="activeUserLabel">-</strong></div>
 
-            <div id="editModeBox" class="edit-mode">Düzenleme modundasın</div>
+            <div id="editModeBox" class="edit-mode" data-i18n="editMode">Düzenleme modundasın</div>
 
             <div class="toggle">
-              <button id="expenseTab" class="active" onclick="setType('EXPENSE')">Gider</button>
-              <button id="incomeTab" onclick="setType('INCOME')">Gelir</button>
+              <button id="expenseTab" class="active" onclick="setType('EXPENSE')" data-i18n="expenseTab">Gider</button>
+              <button id="incomeTab" onclick="setType('INCOME')" data-i18n="incomeTab">Gelir</button>
             </div>
 
             <div class="form-grid">
               <div>
-                <label>Açıklama</label>
-                <input id="desc" type="text" placeholder="Örn: Market alışverişi" />
+                <label data-i18n="descriptionLabel">Açıklama</label>
+                <input id="desc" type="text" data-i18n-placeholder="descriptionPlaceholder" placeholder="Örn: Market alışverişi" />
               </div>
 
               <div>
-                <label>Tutar</label>
-                <input id="amount" type="number" placeholder="0" />
+                <label data-i18n="amountLabel">Tutar</label>
+                <input id="amount" type="number" data-i18n-placeholder="amountPlaceholder" placeholder="0" />
               </div>
 
               <div class="row-2">
                 <div>
-                  <label>Tarih</label>
+                  <label data-i18n="dateLabel">Tarih</label>
                   <input id="date" type="date" />
                 </div>
 
                 <div>
-                  <label>Kategori</label>
+                  <label data-i18n="categoryLabel">Kategori</label>
                   <select id="category"></select>
                 </div>
               </div>
 
               <div class="mini-box">
-                <label>Kategori Yönetimi</label>
+                <label data-i18n="categoryManagement">Kategori Yönetimi</label>
                 <div class="inline-row">
-                  <input id="newCategoryName" type="text" placeholder="Yeni kategori adı" />
-                  <button class="secondary-btn" onclick="addCategory()">Ekle</button>
+                  <input id="newCategoryName" type="text" data-i18n-placeholder="newCategoryPlaceholder" placeholder="Yeni kategori adı" />
+                  <button class="secondary-btn" onclick="addCategory()" data-i18n="addBtn">Ekle</button>
                 </div>
               </div>
 
               <div class="installment-box" id="installmentBox">
                 <div class="check-row">
                   <input id="isInstallment" type="checkbox" onchange="toggleInstallment()" />
-                  <span>Taksitli harcama</span>
+                  <span data-i18n="installmentExpense">Taksitli harcama</span>
                 </div>
 
                 <div id="installmentControls" style="display:none;">
-                  <label>Taksit Sayısı: <span id="instCountLabel">3</span></label>
+                  <label><span data-i18n="installmentCount">Taksit Sayısı</span>: <span id="instCountLabel">3</span></label>
                   <input id="instCount" type="range" min="2" max="12" value="3" oninput="updateInstallmentLabel()" />
-                  <div class="hint">Tutar aylara bölünerek otomatik eklenir.</div>
+                  <div class="hint" data-i18n="installmentHint">Tutar aylara bölünerek otomatik eklenir.</div>
                 </div>
               </div>
 
               <div id="normalButtons">
-                <button class="save-btn" onclick="submitTransaction()">Kaydet</button>
+                <button class="save-btn" onclick="submitTransaction()" data-i18n="saveBtn">Kaydet</button>
               </div>
 
               <div id="editButtons" class="update-row">
-                <button class="update-btn" onclick="updateTransaction()">Güncelle</button>
-                <button class="cancel-btn" onclick="cancelEdit()">İptal</button>
+                <button class="update-btn" onclick="updateTransaction()" data-i18n="updateBtn">Güncelle</button>
+                <button class="cancel-btn" onclick="cancelEdit()" data-i18n="cancelBtn">İptal</button>
               </div>
             </div>
           </div>
 
           <div class="right-col">
             <div class="card">
-              <h2 class="card-title">Kategori Analizi</h2>
+              <h2 class="card-title" data-i18n="categoryAnalysis">Kategori Analizi</h2>
               <div class="analysis-grid">
                 <div class="category-list" id="categoryAnalysis"></div>
                 <div>
@@ -944,7 +945,7 @@
                     <div class="donut" id="donutChart">
                       <div class="donut-center">
                         <strong id="donutCenterText">Veri yok</strong>
-                        <span>Bu ayki gider dağılımı</span>
+                        <span data-i18n="monthlyExpenseDistribution">Bu ayki gider dağılımı</span>
                       </div>
                     </div>
                   </div>
@@ -955,12 +956,12 @@
 
             <div class="card">
               <div class="list-head">
-                <h2 class="card-title" style="margin:0;">İşlem Geçmişi</h2>
+                <h2 class="card-title" style="margin:0;" data-i18n="transactionHistory">İşlem Geçmişi</h2>
                 <div class="badge" id="recordCount">0 kayıt</div>
               </div>
 
               <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
-                <input id="searchInput" type="text" placeholder="Ara..." style="flex:1;" />
+                <input id="searchInput" type="text" data-i18n-placeholder="searchPlaceholder" placeholder="Ara..." style="flex:1;" />
 
                 <select id="typeFilter" style="max-width:140px;">
                   <option value="ALL">Tümü</option>
@@ -982,9 +983,193 @@
   </div>
 
   <script>
+    const translations = {
+      tr: {
+        appTitle: "Bütçe Takip",
+        appSubtitle: "Gelir ve giderlerini daha düzenli takip et",
+        activeUsersTitle: "Aktif Kullanıcılar",
+        newUserTitle: "Yeni Kullanıcı",
+        editActiveUserTitle: "Aktif Kullanıcıyı Düzenle",
+        backupTitle: "Yedek",
+        infoTitle: "Bilgi",
+        infoText: "Export işlemleri yalnızca seçili ayın aktif kullanıcı verisini indirir.",
+        newUserPlaceholder: "İsim gir",
+        editUserPlaceholder: "Yeni isim gir",
+        addUserBtn: "Kullanıcı Ekle",
+        updateNameBtn: "İsmi Güncelle",
+        deleteUserBtn: "Kullanıcıyı Sil",
+        jsonDownloadBtn: "JSON İndir",
+        csvDownloadBtn: "CSV İndir",
+        loadBackupBtn: "Yedek Yükle",
+        jsonExportBtn: "JSON Export",
+        csvExportBtn: "CSV Export",
+        importBtn: "Import",
+        totalAssets: "Toplam Varlık",
+        monthlyIncome: "Aylık Gelir",
+        monthlyExpense: "Aylık Gider",
+        expenseVsLastMonth: "Geçen Aya Göre Gider",
+        topCategory: "En Çok Harcanan Kategori",
+        savingRate: "Tasarruf Oranı",
+        activeUserLabel: "Aktif kullanıcı:",
+        newTransaction: "Yeni İşlem Ekle",
+        editMode: "Düzenleme modundasın",
+        expenseTab: "Gider",
+        incomeTab: "Gelir",
+        descriptionLabel: "Açıklama",
+        amountLabel: "Tutar",
+        dateLabel: "Tarih",
+        categoryLabel: "Kategori",
+        categoryManagement: "Kategori Yönetimi",
+        installmentExpense: "Taksitli harcama",
+        installmentCount: "Taksit Sayısı",
+        installmentHint: "Tutar aylara bölünerek otomatik eklenir.",
+        saveBtn: "Kaydet",
+        updateBtn: "Güncelle",
+        cancelBtn: "İptal",
+        categoryAnalysis: "Kategori Analizi",
+        monthlyExpenseDistribution: "Bu ayki gider dağılımı",
+        transactionHistory: "İşlem Geçmişi",
+        searchPlaceholder: "Ara...",
+        descriptionPlaceholder: "Örn: Market alışverişi",
+        amountPlaceholder: "0",
+        newCategoryPlaceholder: "Yeni kategori adı",
+        addBtn: "Ekle",
+        activeUserText: "Aktif kullanıcı",
+        switchText: "Geçiş yap",
+        noCategoryText: "Önce kategori ekle",
+        allText: "Tümü",
+        allCategories: "Tüm Kategoriler",
+        noCategoryYet: "Henüz kategori yok. Soldan yeni kategori ekleyebilirsin.",
+        noData: "Veri yok",
+        noTransactionsMonth: "Bu ay için henüz işlem yok. İlk kaydını ekleyebilirsin.",
+        noTransactionsFilter: "Bu filtreye uygun kayıt bulunamadı.",
+        deleteCatBtn: "Sil",
+        compareNoData: "Karşılaştırma için veri yok",
+        compareNoPrev: "Geçen ay gider kaydı yoktu",
+        compareUp: "Gider artmış görünüyor",
+        compareDown: "Gider azalmış görünüyor",
+        compareSame: "Geçen ayla aynı seviyede",
+        noExpenseData: "Bu ay gider kaydı yok",
+        savingHint: "Gelir girildiğinde hesaplanır",
+        savingLeft: "kaldı",
+        invalidBackup: "Geçersiz yedek dosyası.",
+        overwriteConfirm: "Mevcut verilerin üzerine yazılacak. Devam etmek istiyor musun?",
+        backupLoaded: "Yedek başarıyla yüklendi.",
+        backupReadError: "Dosya okunamadı. Geçerli bir JSON dosyası seç.",
+        emptyExport: "Seçili ay için dışa aktarılacak kayıt yok.",
+        enterName: "Lütfen isim gir.",
+        existingUser: "Bu isimde bir kullanıcı zaten var.",
+        enterNewName: "Lütfen yeni isim gir.",
+        existingOtherUser: "Bu isimde başka bir kullanıcı var.",
+        lastUserError: "Son kullanıcı silinemez.",
+        deleteUserConfirm: "adlı kullanıcıyı ve ona ait tüm işlemleri silmek istediğine emin misin?",
+        enterCategory: "Lütfen kategori adı gir.",
+        existingCategory: "Bu kategori zaten var.",
+        categoryInUse: "Bu kategori işlemlerde kullanılıyor, önce ilgili işlemleri sil veya güncelle.",
+        deleteCategoryConfirm: "kategorisini silmek istiyor musun?",
+        addCategoryFirst: "Önce kategori eklemelisin.",
+        fillAllFields: "Lütfen tüm alanları doğru doldur.",
+        deleteTransactionConfirm: "Bu işlemi silmek istediğine emin misin?",
+        incomeText: "Gelir",
+        expenseText: "Gider",
+        recordText: "kayıt",
+        newText: "Yeni"
+      },
+      en: {
+        appTitle: "Budget Tracker",
+        appSubtitle: "Track your income and expenses more easily",
+        activeUsersTitle: "Active Users",
+        newUserTitle: "New User",
+        editActiveUserTitle: "Edit Active User",
+        backupTitle: "Backup",
+        infoTitle: "Info",
+        infoText: "Exports download only the selected month's data for the active user.",
+        newUserPlaceholder: "Enter name",
+        editUserPlaceholder: "Enter new name",
+        addUserBtn: "Add User",
+        updateNameBtn: "Update Name",
+        deleteUserBtn: "Delete User",
+        jsonDownloadBtn: "Download JSON",
+        csvDownloadBtn: "Download CSV",
+        loadBackupBtn: "Load Backup",
+        jsonExportBtn: "JSON Export",
+        csvExportBtn: "CSV Export",
+        importBtn: "Import",
+        totalAssets: "Total Balance",
+        monthlyIncome: "Monthly Income",
+        monthlyExpense: "Monthly Expense",
+        expenseVsLastMonth: "Expense vs Last Month",
+        topCategory: "Top Spending Category",
+        savingRate: "Saving Rate",
+        activeUserLabel: "Active user:",
+        newTransaction: "Add New Transaction",
+        editMode: "You are in edit mode",
+        expenseTab: "Expense",
+        incomeTab: "Income",
+        descriptionLabel: "Description",
+        amountLabel: "Amount",
+        dateLabel: "Date",
+        categoryLabel: "Category",
+        categoryManagement: "Category Management",
+        installmentExpense: "Installment expense",
+        installmentCount: "Installment Count",
+        installmentHint: "The amount is split into months automatically.",
+        saveBtn: "Save",
+        updateBtn: "Update",
+        cancelBtn: "Cancel",
+        categoryAnalysis: "Category Analysis",
+        monthlyExpenseDistribution: "This month's expense distribution",
+        transactionHistory: "Transaction History",
+        searchPlaceholder: "Search...",
+        descriptionPlaceholder: "Ex: Grocery shopping",
+        amountPlaceholder: "0",
+        newCategoryPlaceholder: "New category name",
+        addBtn: "Add",
+        activeUserText: "Active user",
+        switchText: "Switch",
+        noCategoryText: "Add a category first",
+        allText: "All",
+        allCategories: "All Categories",
+        noCategoryYet: "No categories yet. Add a new category from the left side.",
+        noData: "No data",
+        noTransactionsMonth: "No transactions for this month yet. Add your first one.",
+        noTransactionsFilter: "No records match this filter.",
+        deleteCatBtn: "Delete",
+        compareNoData: "No data for comparison",
+        compareNoPrev: "There were no expenses last month",
+        compareUp: "Expenses seem higher",
+        compareDown: "Expenses seem lower",
+        compareSame: "Same level as last month",
+        noExpenseData: "No expense records this month",
+        savingHint: "Calculated when income is entered",
+        savingLeft: "left",
+        invalidBackup: "Invalid backup file.",
+        overwriteConfirm: "Current data will be overwritten. Do you want to continue?",
+        backupLoaded: "Backup loaded successfully.",
+        backupReadError: "Could not read file. Choose a valid JSON file.",
+        emptyExport: "No records to export for the selected month.",
+        enterName: "Please enter a name.",
+        existingUser: "A user with this name already exists.",
+        enterNewName: "Please enter a new name.",
+        existingOtherUser: "Another user with this name already exists.",
+        lastUserError: "The last user cannot be deleted.",
+        deleteUserConfirm: "and all related transactions will be deleted. Are you sure?",
+        enterCategory: "Please enter a category name.",
+        existingCategory: "This category already exists.",
+        categoryInUse: "This category is used in transactions. Delete or update those transactions first.",
+        deleteCategoryConfirm: "Do you want to delete the category",
+        addCategoryFirst: "You need to add a category first.",
+        fillAllFields: "Please fill all fields correctly.",
+        deleteTransactionConfirm: "Are you sure you want to delete this transaction?",
+        incomeText: "Income",
+        expenseText: "Expense",
+        recordText: "records",
+        newText: "New"
+      }
+    };
+
     const defaultUsers = [
-      { id: "1", name: "Sen", color: "#2563eb" },
-      { id: "2", name: "Eşin", color: "#db2777" }
+      { id: "1", name: "Kullanıcı 1", color: "#2563eb" }
     ];
 
     const defaultCategories = [
@@ -1005,9 +1190,14 @@
     let editingId = null;
     let currentDate = new Date();
     let isDarkMode = JSON.parse(localStorage.getItem("budget_dark_mode")) || false;
+    let currentLang = localStorage.getItem("budget_lang") || "tr";
     let searchText = "";
     let filterType = "ALL";
     let filterCategory = "ALL";
+
+    function t(key) {
+      return translations[currentLang][key] || key;
+    }
 
     function saveAll() {
       localStorage.setItem("budget_users", JSON.stringify(users));
@@ -1015,10 +1205,46 @@
       localStorage.setItem("budget_active_user", activeUserId);
       localStorage.setItem("budget_categories", JSON.stringify(customCategories));
       localStorage.setItem("budget_dark_mode", JSON.stringify(isDarkMode));
+      localStorage.setItem("budget_lang", currentLang);
+    }
+
+    function applyLanguage() {
+      document.documentElement.lang = currentLang;
+
+      document.querySelectorAll("[data-i18n]").forEach(el => {
+        const key = el.getAttribute("data-i18n");
+        el.textContent = t(key);
+      });
+
+      document.querySelectorAll("[data-i18n-placeholder]").forEach(el => {
+        const key = el.getAttribute("data-i18n-placeholder");
+        el.placeholder = t(key);
+      });
+
+      const langBtn = document.getElementById("langToggleBtn");
+      if (langBtn) langBtn.innerText = currentLang === "tr" ? "EN" : "TR";
+
+      const typeFilter = document.getElementById("typeFilter");
+      if (typeFilter) {
+        const currentValue = typeFilter.value;
+        typeFilter.innerHTML = `
+          <option value="ALL">${t("allText")}</option>
+          <option value="INCOME">${t("incomeText")}</option>
+          <option value="EXPENSE">${t("expenseText")}</option>
+        `;
+        typeFilter.value = currentValue;
+      }
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === "tr" ? "en" : "tr";
+      saveAll();
+      applyLanguage();
+      renderAll();
     }
 
     function formatMoney(amount) {
-      return new Intl.NumberFormat("tr-TR", {
+      return new Intl.NumberFormat(currentLang === "tr" ? "tr-TR" : "en-US", {
         style: "currency",
         currency: "TRY",
         maximumFractionDigits: 2
@@ -1026,7 +1252,7 @@
     }
 
     function getMonthLabel(date) {
-      return date.toLocaleDateString("tr-TR", {
+      return date.toLocaleDateString(currentLang === "tr" ? "tr-TR" : "en-US", {
         month: "long",
         year: "numeric"
       });
@@ -1052,7 +1278,9 @@
     function applyTheme() {
       document.body.classList.toggle("dark-mode", isDarkMode);
       const btn = document.getElementById("themeToggleBtn");
-      if (btn) btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
+      if (btn) {
+        btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
+      }
     }
 
     function toggleDarkMode() {
@@ -1075,7 +1303,7 @@
           <div class="avatar" style="background:${user.color}">${user.name.charAt(0).toUpperCase()}</div>
           <div>
             <div>${user.name}</div>
-            <div class="small">${user.id === activeUserId ? "Aktif kullanıcı" : "Geçiş yap"}</div>
+            <div class="small">${user.id === activeUserId ? t("activeUserText") : t("switchText")}</div>
           </div>
         `;
         el.onclick = () => {
@@ -1094,10 +1322,10 @@
     function addUser() {
       const input = document.getElementById("newUserName");
       const name = input.value.trim();
-      if (!name) return alert("Lütfen isim gir.");
+      if (!name) return alert(t("enterName"));
 
       const exists = users.some(u => u.name.toLowerCase() === name.toLowerCase());
-      if (exists) return alert("Bu isimde bir kullanıcı zaten var.");
+      if (exists) return alert(t("existingUser"));
 
       const colors = ["#2563eb", "#db2777", "#059669", "#ea580c", "#7c3aed"];
       users.push({
@@ -1115,10 +1343,10 @@
     function renameActiveUser() {
       const input = document.getElementById("editUserName");
       const newName = input.value.trim();
-      if (!newName) return alert("Lütfen yeni isim gir.");
+      if (!newName) return alert(t("enterNewName"));
 
       const exists = users.some(u => u.id !== activeUserId && u.name.toLowerCase() === newName.toLowerCase());
-      if (exists) return alert("Bu isimde başka bir kullanıcı var.");
+      if (exists) return alert(t("existingOtherUser"));
 
       users = users.map(u => {
         if (u.id === activeUserId) return { ...u, name: newName };
@@ -1136,12 +1364,12 @@
 
     function deleteActiveUser() {
       if (users.length <= 1) {
-        alert("Son kullanıcı silinemez.");
+        alert(t("lastUserError"));
         return;
       }
 
       const activeUser = getActiveUser();
-      const ok = confirm(`${activeUser.name} adlı kullanıcıyı ve ona ait tüm işlemleri silmek istediğine emin misin?`);
+      const ok = confirm(`${activeUser.name} ${t("deleteUserConfirm")}`);
       if (!ok) return;
 
       users = users.filter(u => u.id !== activeUserId);
@@ -1159,7 +1387,7 @@
       if (customCategories.length === 0) {
         const option = document.createElement("option");
         option.value = "";
-        option.textContent = "Önce kategori ekle";
+        option.textContent = t("noCategoryText");
         select.appendChild(option);
         return;
       }
@@ -1177,7 +1405,7 @@
       if (!select) return;
 
       const currentValue = filterCategory;
-      select.innerHTML = `<option value="ALL">Tüm Kategoriler</option>`;
+      select.innerHTML = `<option value="ALL">${t("allCategories")}</option>`;
 
       customCategories.forEach(cat => {
         const option = document.createElement("option");
@@ -1206,10 +1434,10 @@
     function addCategory() {
       const input = document.getElementById("newCategoryName");
       const name = input.value.trim();
-      if (!name) return alert("Lütfen kategori adı gir.");
+      if (!name) return alert(t("enterCategory"));
 
       const exists = customCategories.some(c => c.name.toLowerCase() === name.toLowerCase());
-      if (exists) return alert("Bu kategori zaten var.");
+      if (exists) return alert(t("existingCategory"));
 
       const colors = ["#3b82f6", "#ef4444", "#f97316", "#a855f7", "#10b981", "#ec4899", "#6b7280", "#14b8a6"];
       customCategories.push({
@@ -1226,18 +1454,16 @@
     function deleteCategory(name) {
       const inUse = transactions.some(t => t.category === name);
       if (inUse) {
-        alert("Bu kategori işlemlerde kullanılıyor, önce ilgili işlemleri sil veya güncelle.");
+        alert(t("categoryInUse"));
         return;
       }
 
-      const ok = confirm(`${name} kategorisini silmek istiyor musun?`);
+      const ok = confirm(`${t("deleteCategoryConfirm")} "${name}"?`);
       if (!ok) return;
 
       customCategories = customCategories.filter(c => c.name !== name);
 
-      if (filterCategory === name) {
-        filterCategory = "ALL";
-      }
+      if (filterCategory === name) filterCategory = "ALL";
 
       saveAll();
       renderAll();
@@ -1276,12 +1502,12 @@
       const activeUser = getActiveUser();
 
       if (customCategories.length === 0) {
-        alert("Önce kategori eklemelisin.");
+        alert(t("addCategoryFirst"));
         return;
       }
 
       if (!desc || !amount || amount <= 0 || !date || !category) {
-        alert("Lütfen tüm alanları doğru doldur.");
+        alert(t("fillAllFields"));
         return;
       }
 
@@ -1350,15 +1576,15 @@
       const category = document.getElementById("category").value;
 
       if (!desc || !amount || amount <= 0 || !date || !category) {
-        alert("Lütfen tüm alanları doğru doldur.");
+        alert(t("fillAllFields"));
         return;
       }
 
-      transactions = transactions.map(t => {
-        if (t.id === editingId) {
-          return { ...t, desc, amount, date, category, type: currentType };
+      transactions = transactions.map(tItem => {
+        if (tItem.id === editingId) {
+          return { ...tItem, desc, amount, date, category, type: currentType };
         }
-        return t;
+        return tItem;
       });
 
       saveAll();
@@ -1376,8 +1602,8 @@
     }
 
     function deleteTransaction(id) {
-      if (!confirm("Bu işlemi silmek istediğine emin misin?")) return;
-      transactions = transactions.filter(t => t.id !== id);
+      if (!confirm(t("deleteTransactionConfirm"))) return;
+      transactions = transactions.filter(tItem => tItem.id !== id);
       saveAll();
       renderAll();
     }
@@ -1388,17 +1614,26 @@
     }
 
     function getMonthlyTransactions() {
-      return getCurrentMonthFilteredTransactions();
+      return transactions
+        .filter(tItem => {
+          const d = new Date(tItem.date);
+          return (
+            tItem.userId === activeUserId &&
+            d.getMonth() === currentDate.getMonth() &&
+            d.getFullYear() === currentDate.getFullYear()
+          );
+        })
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
     function getPreviousMonthTransactions() {
       const prevDate = new Date(currentDate);
       prevDate.setMonth(prevDate.getMonth() - 1);
 
-      return transactions.filter(t => {
-        const d = new Date(t.date);
+      return transactions.filter(tItem => {
+        const d = new Date(tItem.date);
         return (
-          t.userId === activeUserId &&
+          tItem.userId === activeUserId &&
           d.getMonth() === prevDate.getMonth() &&
           d.getFullYear() === prevDate.getFullYear()
         );
@@ -1406,25 +1641,25 @@
     }
 
     function getFilteredTransactionsForList(monthly) {
-      return monthly.filter(t => {
-        const matchesSearch = t.desc.toLowerCase().includes(searchText);
-        const matchesType = filterType === "ALL" || t.type === filterType;
-        const matchesCategory = filterCategory === "ALL" || t.category === filterCategory;
+      return monthly.filter(tItem => {
+        const matchesSearch = tItem.desc.toLowerCase().includes(searchText);
+        const matchesType = filterType === "ALL" || tItem.type === filterType;
+        const matchesCategory = filterCategory === "ALL" || tItem.category === filterCategory;
         return matchesSearch && matchesType && matchesCategory;
       });
     }
 
     function getExportTransactions() {
-      return getCurrentMonthFilteredTransactions();
+      return getMonthlyTransactions();
     }
 
     function renderStats(monthly) {
       let income = 0;
       let expense = 0;
 
-      monthly.forEach(t => {
-        if (t.type === "INCOME") income += t.amount;
-        else expense += t.amount;
+      monthly.forEach(tItem => {
+        if (tItem.type === "INCOME") income += tItem.amount;
+        else expense += tItem.amount;
       });
 
       document.getElementById("totalBalance").innerText = formatMoney(income - expense);
@@ -1433,13 +1668,8 @@
     }
 
     function renderInsights(monthly, previousMonthly) {
-      const thisMonthExpense = monthly
-        .filter(t => t.type === "EXPENSE")
-        .reduce((sum, t) => sum + t.amount, 0);
-
-      const prevMonthExpense = previousMonthly
-        .filter(t => t.type === "EXPENSE")
-        .reduce((sum, t) => sum + t.amount, 0);
+      const thisMonthExpense = monthly.filter(tItem => tItem.type === "EXPENSE").reduce((sum, tItem) => sum + tItem.amount, 0);
+      const prevMonthExpense = previousMonthly.filter(tItem => tItem.type === "EXPENSE").reduce((sum, tItem) => sum + tItem.amount, 0);
 
       const expenseChangeValue = document.getElementById("expenseChangeValue");
       const expenseChangeText = document.getElementById("expenseChangeText");
@@ -1447,11 +1677,11 @@
       if (prevMonthExpense <= 0 && thisMonthExpense <= 0) {
         expenseChangeValue.innerText = "-";
         expenseChangeValue.className = "stat-value neutral";
-        expenseChangeText.innerText = "Karşılaştırma için veri yok";
+        expenseChangeText.innerText = t("compareNoData");
       } else if (prevMonthExpense <= 0) {
-        expenseChangeValue.innerText = "Yeni";
+        expenseChangeValue.innerText = t("newText");
         expenseChangeValue.className = "stat-value good";
-        expenseChangeText.innerText = "Geçen ay gider kaydı yoktu";
+        expenseChangeText.innerText = t("compareNoPrev");
       } else {
         const diffPercent = ((thisMonthExpense - prevMonthExpense) / prevMonthExpense) * 100;
         const rounded = Math.abs(diffPercent).toFixed(1);
@@ -1459,29 +1689,29 @@
         if (diffPercent > 0) {
           expenseChangeValue.innerText = `+%${rounded}`;
           expenseChangeValue.className = "stat-value bad";
-          expenseChangeText.innerText = "Gider artmış görünüyor";
+          expenseChangeText.innerText = t("compareUp");
         } else if (diffPercent < 0) {
           expenseChangeValue.innerText = `-%${rounded}`;
           expenseChangeValue.className = "stat-value good";
-          expenseChangeText.innerText = "Gider azalmış görünüyor";
+          expenseChangeText.innerText = t("compareDown");
         } else {
           expenseChangeValue.innerText = "%0";
           expenseChangeValue.className = "stat-value neutral";
-          expenseChangeText.innerText = "Geçen ayla aynı seviyede";
+          expenseChangeText.innerText = t("compareSame");
         }
       }
 
-      const expenses = monthly.filter(t => t.type === "EXPENSE");
+      const expenses = monthly.filter(tItem => tItem.type === "EXPENSE");
       const topCategoryValue = document.getElementById("topCategoryValue");
       const topCategoryText = document.getElementById("topCategoryText");
 
       if (expenses.length === 0) {
         topCategoryValue.innerText = "-";
-        topCategoryText.innerText = "Bu ay gider kaydı yok";
+        topCategoryText.innerText = t("noExpenseData");
       } else {
         const map = {};
-        expenses.forEach(t => {
-          map[t.category] = (map[t.category] || 0) + t.amount;
+        expenses.forEach(tItem => {
+          map[tItem.category] = (map[tItem.category] || 0) + tItem.amount;
         });
 
         const top = Object.entries(map).sort((a, b) => b[1] - a[1])[0];
@@ -1489,31 +1719,24 @@
         topCategoryText.innerText = formatMoney(top[1]);
       }
 
-      const thisMonthIncome = monthly
-        .filter(t => t.type === "INCOME")
-        .reduce((sum, t) => sum + t.amount, 0);
-
+      const thisMonthIncome = monthly.filter(tItem => tItem.type === "INCOME").reduce((sum, tItem) => sum + tItem.amount, 0);
       const savingRateValue = document.getElementById("savingRateValue");
       const savingRateText = document.getElementById("savingRateText");
 
       if (thisMonthIncome <= 0) {
         savingRateValue.innerText = "0%";
         savingRateValue.className = "stat-value neutral";
-        savingRateText.innerText = "Gelir girildiğinde hesaplanır";
+        savingRateText.innerText = t("savingHint");
       } else {
         const savingRate = ((thisMonthIncome - thisMonthExpense) / thisMonthIncome) * 100;
         const rounded = Math.round(savingRate);
 
         savingRateValue.innerText = `${rounded}%`;
-        if (savingRate >= 20) {
-          savingRateValue.className = "stat-value good";
-        } else if (savingRate >= 0) {
-          savingRateValue.className = "stat-value neutral";
-        } else {
-          savingRateValue.className = "stat-value bad";
-        }
+        if (savingRate >= 20) savingRateValue.className = "stat-value good";
+        else if (savingRate >= 0) savingRateValue.className = "stat-value neutral";
+        else savingRateValue.className = "stat-value bad";
 
-        savingRateText.innerText = `${formatMoney(thisMonthIncome - thisMonthExpense)} kaldı`;
+        savingRateText.innerText = `${formatMoney(thisMonthIncome - thisMonthExpense)} ${t("savingLeft")}`;
       }
     }
 
@@ -1527,20 +1750,17 @@
       legend.innerHTML = "";
 
       if (customCategories.length === 0) {
-        container.innerHTML = `<div class="empty">Henüz kategori yok. Soldan yeni kategori ekleyebilirsin.</div>`;
+        container.innerHTML = `<div class="empty">${t("noCategoryYet")}</div>`;
         donut.style.background = isDarkMode ? "rgba(148, 163, 184, 0.2)" : "#e2e8f0";
-        donutCenterText.innerText = "Kategori yok";
+        donutCenterText.innerText = t("noData");
         return;
       }
 
-      const expenses = monthly.filter(t => t.type === "EXPENSE");
-      const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
+      const expenses = monthly.filter(tItem => tItem.type === "EXPENSE");
+      const totalExpense = expenses.reduce((sum, tItem) => sum + tItem.amount, 0);
 
       const categoryTotals = customCategories.map(cat => {
-        const spent = expenses
-          .filter(t => t.category === cat.name)
-          .reduce((sum, t) => sum + t.amount, 0);
-
+        const spent = expenses.filter(tItem => tItem.category === cat.name).reduce((sum, tItem) => sum + tItem.amount, 0);
         return { ...cat, spent };
       });
 
@@ -1561,7 +1781,7 @@
                 style="width:90px; padding:6px 8px; border-radius:8px;"
                 onchange="updateCategoryLimit('${cat.name}', this.value)"
               />
-              <button class="cat-delete-btn" onclick="deleteCategory('${cat.name}')">Sil</button>
+              <button class="cat-delete-btn" onclick="deleteCategory('${cat.name}')">${t("deleteCatBtn")}</button>
             </div>
           </div>
           <div class="category-line">
@@ -1579,7 +1799,7 @@
 
       if (totalExpense <= 0 || nonZero.length === 0) {
         donut.style.background = isDarkMode ? "rgba(148, 163, 184, 0.2)" : "#e2e8f0";
-        donutCenterText.innerText = "Veri yok";
+        donutCenterText.innerText = t("noData");
         return;
       }
 
@@ -1612,43 +1832,42 @@
       list.innerHTML = "";
 
       const filtered = getFilteredTransactionsForList(monthly);
-
-      document.getElementById("recordCount").innerText = `${filtered.length} kayıt`;
+      document.getElementById("recordCount").innerText = `${filtered.length} ${t("recordText")}`;
 
       if (monthly.length === 0) {
-        list.innerHTML = `<div class="empty">Bu ay için henüz işlem yok. İlk kaydını ekleyebilirsin.</div>`;
+        list.innerHTML = `<div class="empty">${t("noTransactionsMonth")}</div>`;
         return;
       }
 
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="empty">Bu filtreye uygun kayıt bulunamadı.</div>`;
+        list.innerHTML = `<div class="empty">${t("noTransactionsFilter")}</div>`;
         return;
       }
 
-      filtered.forEach(t => {
+      filtered.forEach(tItem => {
         const item = document.createElement("div");
         item.className = "transaction-item";
 
-        const isIncome = t.type === "INCOME";
-        const dateText = new Date(t.date).toLocaleDateString("tr-TR");
+        const isIncome = tItem.type === "INCOME";
+        const dateText = new Date(tItem.date).toLocaleDateString(currentLang === "tr" ? "tr-TR" : "en-US");
 
         item.innerHTML = `
           <div class="item-left">
             <div class="icon-wrap ${isIncome ? "icon-income" : ""}">
-              ${isIncome ? "+" : t.category.charAt(0)}
+              ${isIncome ? "+" : tItem.category.charAt(0)}
             </div>
             <div class="item-text">
-              <div class="item-title">${t.desc}</div>
-              <div class="item-meta">${t.category} • ${dateText}</div>
+              <div class="item-title">${tItem.desc}</div>
+              <div class="item-meta">${tItem.category} • ${dateText}</div>
             </div>
           </div>
 
           <div class="item-right">
             <span class="${isIncome ? "money-income" : "money-expense"}">
-              ${isIncome ? "+" : "-"}${formatMoney(t.amount)}
+              ${isIncome ? "+" : "-"}${formatMoney(tItem.amount)}
             </span>
-            <button class="mini-btn edit-btn" onclick="startEdit(${t.id})">Düzenle</button>
-            <button class="mini-btn delete-btn" onclick="deleteTransaction(${t.id})">Sil</button>
+            <button class="mini-btn edit-btn" onclick="startEdit(${tItem.id})">${t("updateBtn")}</button>
+            <button class="mini-btn delete-btn" onclick="deleteTransaction(${tItem.id})">${t("deleteCatBtn")}</button>
           </div>
         `;
 
@@ -1680,29 +1899,26 @@
 
     function exportCSV() {
       const exportTransactions = getExportTransactions();
-
       if (exportTransactions.length === 0) {
-        alert("Seçili ay için dışa aktarılacak kayıt yok.");
+        alert(t("emptyExport"));
         return;
       }
 
-      const headers = ["Kullanıcı", "Açıklama", "Tutar", "Tür", "Kategori", "Tarih"];
+      const headers = currentLang === "tr"
+        ? ["Kullanıcı", "Açıklama", "Tutar", "Tür", "Kategori", "Tarih"]
+        : ["User", "Description", "Amount", "Type", "Category", "Date"];
 
-      const rows = exportTransactions.map(t => [
-        t.owner || "",
-        t.desc || "",
-        t.amount ?? "",
-        t.type === "INCOME" ? "Gelir" : "Gider",
-        t.category || "",
-        t.date || ""
+      const rows = exportTransactions.map(tItem => [
+        tItem.owner || "",
+        tItem.desc || "",
+        tItem.amount ?? "",
+        tItem.type === "INCOME" ? t("incomeText") : t("expenseText"),
+        tItem.category || "",
+        tItem.date || ""
       ]);
 
       const csvContent = [headers, ...rows]
-        .map(row =>
-          row
-            .map(value => `"${String(value).replace(/"/g, '""')}"`)
-            .join(";")
-        )
+        .map(row => row.map(value => `"${String(value).replace(/"/g, '""')}"`).join(";"))
         .join("\n");
 
       const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
@@ -1727,11 +1943,11 @@
           const data = JSON.parse(e.target.result);
 
           if (!data.users || !data.transactions || !data.customCategories) {
-            alert("Geçersiz yedek dosyası.");
+            alert(t("invalidBackup"));
             return;
           }
 
-          const ok = confirm("Mevcut verilerin üzerine yazılacak. Devam etmek istiyor musun?");
+          const ok = confirm(t("overwriteConfirm"));
           if (!ok) return;
 
           users = data.users;
@@ -1741,9 +1957,9 @@
 
           saveAll();
           renderAll();
-          alert("Yedek başarıyla yüklendi.");
+          alert(t("backupLoaded"));
         } catch {
-          alert("Dosya okunamadı. Geçerli bir JSON dosyası seç.");
+          alert(t("backupReadError"));
         } finally {
           event.target.value = "";
         }
@@ -1753,6 +1969,7 @@
     }
 
     function renderAll() {
+      applyLanguage();
       document.getElementById("monthLabel").innerText = getMonthLabel(currentDate);
       renderUsers();
       renderCategories();
@@ -1786,6 +2003,7 @@
 
     document.getElementById("date").value = new Date().toISOString().split("T")[0];
     applyTheme();
+    applyLanguage();
     renderCategories();
     renderCategoryFilter();
     setType("EXPENSE");
