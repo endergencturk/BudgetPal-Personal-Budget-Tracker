@@ -28,7 +28,7 @@ Bu proje, gerçek bir ihtiyacı çözmek ve frontend geliştirme becerilerini il
 
 ## 🔗 Canlı Demo
 
-(Yakında eklenecek)
+https://endergencturk.github.io/butce-takip-app/
 
 ## 📸 Ekran Görüntüsü
 
