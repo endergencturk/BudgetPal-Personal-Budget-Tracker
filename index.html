@@ -388,6 +388,7 @@
       justify-content: space-between;
       gap: 10px;
       font-size: 14px;
+      align-items: center;
     }
 
     .progress {
@@ -868,6 +869,21 @@
                 <h2 class="card-title" style="margin:0;">İşlem Geçmişi</h2>
                 <div class="badge" id="recordCount">0 kayıt</div>
               </div>
+
+              <div style="display:flex; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+                <input id="searchInput" type="text" placeholder="Ara..." style="flex:1;" />
+
+                <select id="typeFilter" style="max-width:140px;">
+                  <option value="ALL">Tümü</option>
+                  <option value="INCOME">Gelir</option>
+                  <option value="EXPENSE">Gider</option>
+                </select>
+
+                <select id="categoryFilter" style="max-width:180px;">
+                  <option value="ALL">Tüm Kategoriler</option>
+                </select>
+              </div>
+
               <div class="transaction-list" id="transactionList"></div>
             </div>
           </div>
@@ -900,6 +916,9 @@
     let editingId = null;
     let currentDate = new Date();
     let isDarkMode = JSON.parse(localStorage.getItem("budget_dark_mode")) || false;
+    let searchText = "";
+    let filterType = "ALL";
+    let filterCategory = "ALL";
 
     function saveAll() {
       localStorage.setItem("budget_users", JSON.stringify(users));
@@ -1047,6 +1066,37 @@
       });
     }
 
+    function renderCategoryFilter() {
+      const select = document.getElementById("categoryFilter");
+      if (!select) return;
+
+      const currentValue = filterCategory;
+      select.innerHTML = `<option value="ALL">Tüm Kategoriler</option>`;
+
+      customCategories.forEach(cat => {
+        const option = document.createElement("option");
+        option.value = cat.name;
+        option.textContent = cat.name;
+        select.appendChild(option);
+      });
+
+      select.value = currentValue;
+    }
+
+    function updateCategoryLimit(name, value) {
+      const newLimit = Number(value);
+
+      customCategories = customCategories.map(cat => {
+        if (cat.name === name) {
+          return { ...cat, limit: newLimit };
+        }
+        return cat;
+      });
+
+      saveAll();
+      renderAll();
+    }
+
     function addCategory() {
       const input = document.getElementById("newCategoryName");
       const name = input.value.trim();
@@ -1065,6 +1115,7 @@
       input.value = "";
       saveAll();
       renderCategories();
+      renderCategoryFilter();
       renderAll();
     }
 
@@ -1269,14 +1320,24 @@
         row.className = "category-row";
 
         const percent = cat.limit > 0 ? Math.min((cat.spent / cat.limit) * 100, 100) : 0;
+        const isOver = cat.spent > cat.limit;
 
         row.innerHTML = `
           <div class="category-line">
             <strong>${cat.name}</strong>
+            <input
+              type="number"
+              value="${cat.limit}"
+              style="width:90px; padding:6px 8px; border-radius:8px;"
+              onchange="updateCategoryLimit('${cat.name}', this.value)"
+            />
+          </div>
+          <div class="category-line">
             <span>${formatMoney(cat.spent)} / ${formatMoney(cat.limit)}</span>
+            <span>${isOver ? "⚠️" : ""}</span>
           </div>
           <div class="progress">
-            <div style="width:${percent}%; background:${cat.color};"></div>
+            <div style="width:${percent}%; background:${isOver ? '#dc2626' : cat.color};"></div>
           </div>
         `;
         container.appendChild(row);
@@ -1318,15 +1379,23 @@
 
     function renderTransactions(monthly) {
       const list = document.getElementById("transactionList");
-      document.getElementById("recordCount").innerText = `${monthly.length} kayıt`;
       list.innerHTML = "";
 
-      if (monthly.length === 0) {
-        list.innerHTML = `<div class="empty">Bu ay için kayıt bulunamadı.</div>`;
+      const filtered = monthly.filter(t => {
+        const matchesSearch = t.desc.toLowerCase().includes(searchText);
+        const matchesType = filterType === "ALL" || t.type === filterType;
+        const matchesCategory = filterCategory === "ALL" || t.category === filterCategory;
+        return matchesSearch && matchesType && matchesCategory;
+      });
+
+      document.getElementById("recordCount").innerText = `${filtered.length} kayıt`;
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="empty">Bu filtreye uygun kayıt bulunamadı.</div>`;
         return;
       }
 
-      monthly.forEach(t => {
+      filtered.forEach(t => {
         const item = document.createElement("div");
         item.className = "transaction-item";
 
@@ -1361,15 +1430,32 @@
       document.getElementById("monthLabel").innerText = getMonthLabel(currentDate);
       renderUsers();
       renderCategories();
+      renderCategoryFilter();
       const monthly = getMonthlyTransactions();
       renderStats(monthly);
       renderAnalysis(monthly);
       renderTransactions(monthly);
     }
 
+    document.getElementById("searchInput").addEventListener("input", (e) => {
+      searchText = e.target.value.toLowerCase();
+      renderAll();
+    });
+
+    document.getElementById("typeFilter").addEventListener("change", (e) => {
+      filterType = e.target.value;
+      renderAll();
+    });
+
+    document.getElementById("categoryFilter").addEventListener("change", (e) => {
+      filterCategory = e.target.value;
+      renderAll();
+    });
+
     document.getElementById("date").value = new Date().toISOString().split("T")[0];
     applyTheme();
     renderCategories();
+    renderCategoryFilter();
     setType("EXPENSE");
     renderAll();
   </script>
