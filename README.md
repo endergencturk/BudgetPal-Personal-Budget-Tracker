@@ -1,57 +1,35 @@
-# 💰 Bütçe Takip Uygulaması
+# 💸 Bütçe Takip Uygulaması
 
-Kendi kullanımım için geliştirdiğim kişisel bütçe takip uygulaması.
-
-Bu proje ile:
-- yazılım öğreniyorum
-- küçük küçük geliştirmeler yapıyorum
-- gerçek bir ürün çıkarmayı hedefliyorum
-
----
+Kişisel gelir ve gider takibini kolaylaştıran basit ama güçlü bir web uygulaması.
 
 ## 🚀 Özellikler
 
-- 👤 Kullanıcı ekleme / silme / düzenleme
-- 📂 Kategori ekleme
-- 💸 Gelir / gider ekleme
-- 📆 Aylık özet
-- 📊 Kategori analizi
-- 📜 İşlem geçmişi
+- 👤 Çoklu kullanıcı desteği
+- 💰 Gelir / gider ekleme
+- 📆 Aylık bazlı takip
+- 🧾 Taksitli harcama sistemi
+- 📊 Kategori analizi (grafik)
+- ⚠️ Kategori limitleri ve uyarı sistemi
+- 🔍 İşlem arama ve filtreleme
 - 🌙 Dark mode
-- 🔍 Arama ve filtreleme (gelir / gider / kategori)
+- 💾 JSON yedekleme / yükleme
+- 📄 CSV export (Excel uyumlu)
 
----
+## 🎯 Amaç
 
-## 🛠️ Kullanılan Teknolojiler
+Bu proje, gerçek bir ihtiyacı çözmek ve frontend geliştirme becerilerini ilerletmek amacıyla yapılmıştır.
+
+## 🛠️ Teknolojiler
 
 - HTML
 - CSS
 - JavaScript (Vanilla JS)
 - LocalStorage
 
----
+## 🔗 Canlı Demo
 
-## 🎯 Amaç
+(Yakında eklenecek)
 
-Bu projeyi geliştirerek:
+## 📸 Ekran Görüntüsü
 
-- yazılım öğrenmek
-- gerçek bir ürün oluşturmak
-- ileride freelance işler yapabilmek
-- uygulamayı daha büyük bir projeye dönüştürmek
-
----
-
-## 📌 Not
-
-Bu proje "vibe coding" yaklaşımıyla geliştirilmektedir.  
-Yani küçük adımlarla, pratik yaparak ve AI ile birlikte ilerlenmektedir.
-
----
-
-## 🔄 Geliştirme Planı
-
-- [ ] Kategori limit düzenleme
-- [ ] Mobil uyumluluk geliştirme
-- [ ] Aylık kıyaslama (önceki ay)
-- [ ] Veri export / import
+(Yakında eklenecek)
