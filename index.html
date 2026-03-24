@@ -23,6 +23,8 @@
       --red-bg: #fef2f2;
       --blue: #2563eb;
       --blue-bg: #eff6ff;
+      --amber: #d97706;
+      --amber-bg: #fff7ed;
       --shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
       --radius: 18px;
     }
@@ -38,6 +40,7 @@
       --green-bg: rgba(22, 163, 74, 0.15);
       --red-bg: rgba(220, 38, 38, 0.15);
       --blue-bg: rgba(37, 99, 235, 0.18);
+      --amber-bg: rgba(217, 119, 6, 0.12);
       --shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
     }
 
@@ -166,7 +169,15 @@
       font-size: 18px;
     }
 
-    .stats {
+    .toolbar-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .stats,
+    .insight-stats {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
@@ -201,6 +212,12 @@
     .stat-value {
       font-size: 24px;
       font-weight: 700;
+    }
+
+    .stat-sub {
+      margin-top: 8px;
+      font-size: 13px;
+      color: var(--muted);
     }
 
     .layout {
@@ -348,6 +365,18 @@
       border: none;
       background: #e2e8f0;
       color: #0f172a;
+      padding: 12px 13px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .blue-btn {
+      border: none;
+      background: var(--blue);
+      color: white;
       padding: 12px 13px;
       border-radius: 12px;
       font-weight: 700;
@@ -576,6 +605,17 @@
       color: #334155;
     }
 
+    .cat-delete-btn {
+      background: var(--red-bg);
+      color: var(--red);
+      border: none;
+      padding: 6px 8px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
     body.dark-mode .delete-btn {
       background: #1e293b;
       color: #e5edf7;
@@ -623,6 +663,9 @@
       text-align: center;
       color: var(--muted);
       padding: 30px 10px;
+      border: 1px dashed var(--border);
+      border-radius: 14px;
+      background: rgba(148, 163, 184, 0.04);
     }
 
     .inline-row {
@@ -663,6 +706,18 @@
       font-size: 13px;
     }
 
+    .good {
+      color: var(--green);
+    }
+
+    .bad {
+      color: var(--red);
+    }
+
+    .neutral {
+      color: var(--muted);
+    }
+
     @media (max-width: 1180px) {
       .layout {
         grid-template-columns: 1fr;
@@ -682,7 +737,8 @@
         display: none;
       }
 
-      .stats {
+      .stats,
+      .insight-stats {
         grid-template-columns: 1fr;
       }
     }
@@ -737,8 +793,18 @@
       </div>
 
       <div class="menu-card">
+        <div class="menu-title">Yedek</div>
+        <div class="sidebar-action-row">
+          <button class="muted-btn" onclick="exportData()">JSON İndir</button>
+          <button class="muted-btn" onclick="exportCSV()">CSV İndir</button>
+          <button class="muted-btn" onclick="document.getElementById('importFile').click()">Yedek Yükle</button>
+          <input id="importFile" type="file" accept=".json" style="display:none;" />
+        </div>
+      </div>
+
+      <div class="menu-card">
         <div class="menu-title">Bilgi</div>
-        <div class="small">Veriler tarayıcıda saklanır. Sayfayı kapatsan da kalır.</div>
+        <div class="small">Export işlemleri yalnızca seçili ayın aktif kullanıcı verisini indirir.</div>
       </div>
     </aside>
 
@@ -750,8 +816,11 @@
             <p>Gelir ve giderlerini daha düzenli takip et</p>
           </div>
 
-          <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+          <div class="toolbar-row">
             <button class="light-btn" onclick="toggleDarkMode()" id="themeToggleBtn">🌙 Dark</button>
+            <button class="blue-btn" onclick="exportData()">JSON Export</button>
+            <button class="light-btn" onclick="exportCSV()">CSV Export</button>
+            <button class="light-btn" onclick="document.getElementById('importFile').click()">Import</button>
 
             <div class="month-box">
               <button onclick="changeMonth(-1)">‹</button>
@@ -775,6 +844,26 @@
           <div class="stat-card">
             <div class="stat-label">Aylık Gider</div>
             <div class="stat-value" id="monthlyExpense">0 TL</div>
+          </div>
+        </section>
+
+        <section class="insight-stats">
+          <div class="stat-card">
+            <div class="stat-label">Geçen Aya Göre Gider</div>
+            <div class="stat-value" id="expenseChangeValue">-</div>
+            <div class="stat-sub" id="expenseChangeText">Karşılaştırma yok</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">En Çok Harcanan Kategori</div>
+            <div class="stat-value" id="topCategoryValue">-</div>
+            <div class="stat-sub" id="topCategoryText">Veri yok</div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-label">Tasarruf Oranı</div>
+            <div class="stat-value" id="savingRateValue">0%</div>
+            <div class="stat-sub" id="savingRateText">Gelir girildiğinde hesaplanır</div>
           </div>
         </section>
 
@@ -814,7 +903,7 @@
               </div>
 
               <div class="mini-box">
-                <label>Kategori Ekle</label>
+                <label>Kategori Yönetimi</label>
                 <div class="inline-row">
                   <input id="newCategoryName" type="text" placeholder="Yeni kategori adı" />
                   <button class="secondary-btn" onclick="addCategory()">Ekle</button>
@@ -933,7 +1022,7 @@
         style: "currency",
         currency: "TRY",
         maximumFractionDigits: 2
-      }).format(amount);
+      }).format(amount || 0);
     }
 
     function getMonthLabel(date) {
@@ -947,12 +1036,23 @@
       return users.find(u => u.id === activeUserId) || users[0];
     }
 
+    function getCurrentMonthFilteredTransactions() {
+      return transactions
+        .filter(t => {
+          const d = new Date(t.date);
+          return (
+            t.userId === activeUserId &&
+            d.getMonth() === currentDate.getMonth() &&
+            d.getFullYear() === currentDate.getFullYear()
+          );
+        })
+        .sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+
     function applyTheme() {
       document.body.classList.toggle("dark-mode", isDarkMode);
       const btn = document.getElementById("themeToggleBtn");
-      if (btn) {
-        btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
-      }
+      if (btn) btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
     }
 
     function toggleDarkMode() {
@@ -1005,6 +1105,7 @@
         name,
         color: colors[Math.floor(Math.random() * colors.length)]
       });
+
       activeUserId = users[users.length - 1].id;
       input.value = "";
       saveAll();
@@ -1020,16 +1121,12 @@
       if (exists) return alert("Bu isimde başka bir kullanıcı var.");
 
       users = users.map(u => {
-        if (u.id === activeUserId) {
-          return { ...u, name: newName };
-        }
+        if (u.id === activeUserId) return { ...u, name: newName };
         return u;
       });
 
       transactions = transactions.map(t => {
-        if (t.userId === activeUserId) {
-          return { ...t, owner: newName };
-        }
+        if (t.userId === activeUserId) return { ...t, owner: newName };
         return t;
       });
 
@@ -1058,6 +1155,15 @@
     function renderCategories() {
       const select = document.getElementById("category");
       select.innerHTML = "";
+
+      if (customCategories.length === 0) {
+        const option = document.createElement("option");
+        option.value = "";
+        option.textContent = "Önce kategori ekle";
+        select.appendChild(option);
+        return;
+      }
+
       customCategories.forEach(cat => {
         const option = document.createElement("option");
         option.value = cat.name;
@@ -1088,7 +1194,7 @@
 
       customCategories = customCategories.map(cat => {
         if (cat.name === name) {
-          return { ...cat, limit: newLimit };
+          return { ...cat, limit: newLimit > 0 ? newLimit : 0 };
         }
         return cat;
       });
@@ -1114,8 +1220,26 @@
 
       input.value = "";
       saveAll();
-      renderCategories();
-      renderCategoryFilter();
+      renderAll();
+    }
+
+    function deleteCategory(name) {
+      const inUse = transactions.some(t => t.category === name);
+      if (inUse) {
+        alert("Bu kategori işlemlerde kullanılıyor, önce ilgili işlemleri sil veya güncelle.");
+        return;
+      }
+
+      const ok = confirm(`${name} kategorisini silmek istiyor musun?`);
+      if (!ok) return;
+
+      customCategories = customCategories.filter(c => c.name !== name);
+
+      if (filterCategory === name) {
+        filterCategory = "ALL";
+      }
+
+      saveAll();
       renderAll();
     }
 
@@ -1151,7 +1275,12 @@
       const category = document.getElementById("category").value;
       const activeUser = getActiveUser();
 
-      if (!desc || !amount || amount <= 0 || !date) {
+      if (customCategories.length === 0) {
+        alert("Önce kategori eklemelisin.");
+        return;
+      }
+
+      if (!desc || !amount || amount <= 0 || !date || !category) {
         alert("Lütfen tüm alanları doğru doldur.");
         return;
       }
@@ -1220,21 +1349,14 @@
       const date = document.getElementById("date").value;
       const category = document.getElementById("category").value;
 
-      if (!desc || !amount || amount <= 0 || !date) {
+      if (!desc || !amount || amount <= 0 || !date || !category) {
         alert("Lütfen tüm alanları doğru doldur.");
         return;
       }
 
       transactions = transactions.map(t => {
         if (t.id === editingId) {
-          return {
-            ...t,
-            desc,
-            amount,
-            date,
-            category,
-            type: currentType
-          };
+          return { ...t, desc, amount, date, category, type: currentType };
         }
         return t;
       });
@@ -1266,16 +1388,34 @@
     }
 
     function getMonthlyTransactions() {
-      return transactions
-        .filter(t => {
-          const d = new Date(t.date);
-          return (
-            t.userId === activeUserId &&
-            d.getMonth() === currentDate.getMonth() &&
-            d.getFullYear() === currentDate.getFullYear()
-          );
-        })
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
+      return getCurrentMonthFilteredTransactions();
+    }
+
+    function getPreviousMonthTransactions() {
+      const prevDate = new Date(currentDate);
+      prevDate.setMonth(prevDate.getMonth() - 1);
+
+      return transactions.filter(t => {
+        const d = new Date(t.date);
+        return (
+          t.userId === activeUserId &&
+          d.getMonth() === prevDate.getMonth() &&
+          d.getFullYear() === prevDate.getFullYear()
+        );
+      });
+    }
+
+    function getFilteredTransactionsForList(monthly) {
+      return monthly.filter(t => {
+        const matchesSearch = t.desc.toLowerCase().includes(searchText);
+        const matchesType = filterType === "ALL" || t.type === filterType;
+        const matchesCategory = filterCategory === "ALL" || t.category === filterCategory;
+        return matchesSearch && matchesType && matchesCategory;
+      });
+    }
+
+    function getExportTransactions() {
+      return getCurrentMonthFilteredTransactions();
     }
 
     function renderStats(monthly) {
@@ -1292,6 +1432,91 @@
       document.getElementById("monthlyExpense").innerText = formatMoney(expense);
     }
 
+    function renderInsights(monthly, previousMonthly) {
+      const thisMonthExpense = monthly
+        .filter(t => t.type === "EXPENSE")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const prevMonthExpense = previousMonthly
+        .filter(t => t.type === "EXPENSE")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const expenseChangeValue = document.getElementById("expenseChangeValue");
+      const expenseChangeText = document.getElementById("expenseChangeText");
+
+      if (prevMonthExpense <= 0 && thisMonthExpense <= 0) {
+        expenseChangeValue.innerText = "-";
+        expenseChangeValue.className = "stat-value neutral";
+        expenseChangeText.innerText = "Karşılaştırma için veri yok";
+      } else if (prevMonthExpense <= 0) {
+        expenseChangeValue.innerText = "Yeni";
+        expenseChangeValue.className = "stat-value good";
+        expenseChangeText.innerText = "Geçen ay gider kaydı yoktu";
+      } else {
+        const diffPercent = ((thisMonthExpense - prevMonthExpense) / prevMonthExpense) * 100;
+        const rounded = Math.abs(diffPercent).toFixed(1);
+
+        if (diffPercent > 0) {
+          expenseChangeValue.innerText = `+%${rounded}`;
+          expenseChangeValue.className = "stat-value bad";
+          expenseChangeText.innerText = "Gider artmış görünüyor";
+        } else if (diffPercent < 0) {
+          expenseChangeValue.innerText = `-%${rounded}`;
+          expenseChangeValue.className = "stat-value good";
+          expenseChangeText.innerText = "Gider azalmış görünüyor";
+        } else {
+          expenseChangeValue.innerText = "%0";
+          expenseChangeValue.className = "stat-value neutral";
+          expenseChangeText.innerText = "Geçen ayla aynı seviyede";
+        }
+      }
+
+      const expenses = monthly.filter(t => t.type === "EXPENSE");
+      const topCategoryValue = document.getElementById("topCategoryValue");
+      const topCategoryText = document.getElementById("topCategoryText");
+
+      if (expenses.length === 0) {
+        topCategoryValue.innerText = "-";
+        topCategoryText.innerText = "Bu ay gider kaydı yok";
+      } else {
+        const map = {};
+        expenses.forEach(t => {
+          map[t.category] = (map[t.category] || 0) + t.amount;
+        });
+
+        const top = Object.entries(map).sort((a, b) => b[1] - a[1])[0];
+        topCategoryValue.innerText = top[0];
+        topCategoryText.innerText = formatMoney(top[1]);
+      }
+
+      const thisMonthIncome = monthly
+        .filter(t => t.type === "INCOME")
+        .reduce((sum, t) => sum + t.amount, 0);
+
+      const savingRateValue = document.getElementById("savingRateValue");
+      const savingRateText = document.getElementById("savingRateText");
+
+      if (thisMonthIncome <= 0) {
+        savingRateValue.innerText = "0%";
+        savingRateValue.className = "stat-value neutral";
+        savingRateText.innerText = "Gelir girildiğinde hesaplanır";
+      } else {
+        const savingRate = ((thisMonthIncome - thisMonthExpense) / thisMonthIncome) * 100;
+        const rounded = Math.round(savingRate);
+
+        savingRateValue.innerText = `${rounded}%`;
+        if (savingRate >= 20) {
+          savingRateValue.className = "stat-value good";
+        } else if (savingRate >= 0) {
+          savingRateValue.className = "stat-value neutral";
+        } else {
+          savingRateValue.className = "stat-value bad";
+        }
+
+        savingRateText.innerText = `${formatMoney(thisMonthIncome - thisMonthExpense)} kaldı`;
+      }
+    }
+
     function renderAnalysis(monthly) {
       const container = document.getElementById("categoryAnalysis");
       const donut = document.getElementById("donutChart");
@@ -1301,6 +1526,13 @@
       container.innerHTML = "";
       legend.innerHTML = "";
 
+      if (customCategories.length === 0) {
+        container.innerHTML = `<div class="empty">Henüz kategori yok. Soldan yeni kategori ekleyebilirsin.</div>`;
+        donut.style.background = isDarkMode ? "rgba(148, 163, 184, 0.2)" : "#e2e8f0";
+        donutCenterText.innerText = "Kategori yok";
+        return;
+      }
+
       const expenses = monthly.filter(t => t.type === "EXPENSE");
       const totalExpense = expenses.reduce((sum, t) => sum + t.amount, 0);
 
@@ -1309,10 +1541,7 @@
           .filter(t => t.category === cat.name)
           .reduce((sum, t) => sum + t.amount, 0);
 
-        return {
-          ...cat,
-          spent
-        };
+        return { ...cat, spent };
       });
 
       categoryTotals.forEach(cat => {
@@ -1325,12 +1554,15 @@
         row.innerHTML = `
           <div class="category-line">
             <strong>${cat.name}</strong>
-            <input
-              type="number"
-              value="${cat.limit}"
-              style="width:90px; padding:6px 8px; border-radius:8px;"
-              onchange="updateCategoryLimit('${cat.name}', this.value)"
-            />
+            <div style="display:flex; gap:6px; align-items:center;">
+              <input
+                type="number"
+                value="${cat.limit}"
+                style="width:90px; padding:6px 8px; border-radius:8px;"
+                onchange="updateCategoryLimit('${cat.name}', this.value)"
+              />
+              <button class="cat-delete-btn" onclick="deleteCategory('${cat.name}')">Sil</button>
+            </div>
           </div>
           <div class="category-line">
             <span>${formatMoney(cat.spent)} / ${formatMoney(cat.limit)}</span>
@@ -1346,9 +1578,7 @@
       const nonZero = categoryTotals.filter(c => c.spent > 0);
 
       if (totalExpense <= 0 || nonZero.length === 0) {
-        donut.style.background = isDarkMode
-          ? "rgba(148, 163, 184, 0.2)"
-          : "#e2e8f0";
+        donut.style.background = isDarkMode ? "rgba(148, 163, 184, 0.2)" : "#e2e8f0";
         donutCenterText.innerText = "Veri yok";
         return;
       }
@@ -1381,14 +1611,14 @@
       const list = document.getElementById("transactionList");
       list.innerHTML = "";
 
-      const filtered = monthly.filter(t => {
-        const matchesSearch = t.desc.toLowerCase().includes(searchText);
-        const matchesType = filterType === "ALL" || t.type === filterType;
-        const matchesCategory = filterCategory === "ALL" || t.category === filterCategory;
-        return matchesSearch && matchesType && matchesCategory;
-      });
+      const filtered = getFilteredTransactionsForList(monthly);
 
       document.getElementById("recordCount").innerText = `${filtered.length} kayıt`;
+
+      if (monthly.length === 0) {
+        list.innerHTML = `<div class="empty">Bu ay için henüz işlem yok. İlk kaydını ekleyebilirsin.</div>`;
+        return;
+      }
 
       if (filtered.length === 0) {
         list.innerHTML = `<div class="empty">Bu filtreye uygun kayıt bulunamadı.</div>`;
@@ -1426,31 +1656,133 @@
       });
     }
 
+    function exportData() {
+      const exportTransactions = getExportTransactions();
+      const data = {
+        users: users.filter(u => u.id === activeUserId),
+        transactions: exportTransactions,
+        customCategories,
+        activeUserId,
+        exportMonth: getMonthLabel(currentDate),
+        exportedAt: new Date().toISOString()
+      };
+
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fileDate = new Date().toISOString().slice(0, 10);
+
+      a.href = url;
+      a.download = `butce-${activeUserId}-${fileDate}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function exportCSV() {
+      const exportTransactions = getExportTransactions();
+
+      if (exportTransactions.length === 0) {
+        alert("Seçili ay için dışa aktarılacak kayıt yok.");
+        return;
+      }
+
+      const headers = ["Kullanıcı", "Açıklama", "Tutar", "Tür", "Kategori", "Tarih"];
+
+      const rows = exportTransactions.map(t => [
+        t.owner || "",
+        t.desc || "",
+        t.amount ?? "",
+        t.type === "INCOME" ? "Gelir" : "Gider",
+        t.category || "",
+        t.date || ""
+      ]);
+
+      const csvContent = [headers, ...rows]
+        .map(row =>
+          row
+            .map(value => `"${String(value).replace(/"/g, '""')}"`)
+            .join(";")
+        )
+        .join("\n");
+
+      const blob = new Blob(["\uFEFF" + csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const fileDate = new Date().toISOString().slice(0, 10);
+
+      a.href = url;
+      a.download = `butce-islemler-${fileDate}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+
+          if (!data.users || !data.transactions || !data.customCategories) {
+            alert("Geçersiz yedek dosyası.");
+            return;
+          }
+
+          const ok = confirm("Mevcut verilerin üzerine yazılacak. Devam etmek istiyor musun?");
+          if (!ok) return;
+
+          users = data.users;
+          transactions = data.transactions;
+          customCategories = data.customCategories;
+          activeUserId = data.activeUserId || data.users[0]?.id || "1";
+
+          saveAll();
+          renderAll();
+          alert("Yedek başarıyla yüklendi.");
+        } catch {
+          alert("Dosya okunamadı. Geçerli bir JSON dosyası seç.");
+        } finally {
+          event.target.value = "";
+        }
+      };
+
+      reader.readAsText(file);
+    }
+
     function renderAll() {
       document.getElementById("monthLabel").innerText = getMonthLabel(currentDate);
       renderUsers();
       renderCategories();
       renderCategoryFilter();
+
       const monthly = getMonthlyTransactions();
+      const previousMonthly = getPreviousMonthTransactions();
+
       renderStats(monthly);
+      renderInsights(monthly, previousMonthly);
       renderAnalysis(monthly);
       renderTransactions(monthly);
     }
 
-    document.getElementById("searchInput").addEventListener("input", (e) => {
+    document.getElementById("searchInput").addEventListener("input", e => {
       searchText = e.target.value.toLowerCase();
       renderAll();
     });
 
-    document.getElementById("typeFilter").addEventListener("change", (e) => {
+    document.getElementById("typeFilter").addEventListener("change", e => {
       filterType = e.target.value;
       renderAll();
     });
 
-    document.getElementById("categoryFilter").addEventListener("change", (e) => {
+    document.getElementById("categoryFilter").addEventListener("change", e => {
       filterCategory = e.target.value;
       renderAll();
     });
+
+    document.getElementById("importFile").addEventListener("change", importData);
 
     document.getElementById("date").value = new Date().toISOString().split("T")[0];
     applyTheme();
