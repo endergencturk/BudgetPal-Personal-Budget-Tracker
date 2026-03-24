@@ -1,23 +1,31 @@
 # 💸 Bütçe Takip Uygulaması
 
-Kişisel gelir ve gider takibini kolaylaştıran basit ama güçlü bir web uygulaması.
+Kişisel gelir ve giderleri kolayca yönetmek için geliştirilmiş, çok kullanıcılı bir bütçe takip web uygulaması.
 
 ## 🚀 Özellikler
 
 - 👤 Çoklu kullanıcı desteği
 - 💰 Gelir / gider ekleme
-- 📆 Aylık bazlı takip
-- 🧾 Taksitli harcama sistemi
-- 📊 Kategori analizi (grafik)
+- 📊 Aylık bazlı takip ve özet
+- 📈 Kategori bazlı analiz (grafik)
 - ⚠️ Kategori limitleri ve uyarı sistemi
-- 🔍 İşlem arama ve filtreleme
+- 🧾 Taksitli harcama sistemi
+- 🔍 Arama ve filtreleme
+- 🌐 Türkçe / İngilizce dil desteği
 - 🌙 Dark mode
-- 💾 JSON yedekleme / yükleme
+- 💾 JSON export / import
 - 📄 CSV export (Excel uyumlu)
 
 ## 🎯 Amaç
 
-Bu proje, gerçek bir ihtiyacı çözmek ve frontend geliştirme becerilerini ilerletmek amacıyla yapılmıştır.
+Bu proje:
+
+- Gerçek bir ihtiyaca çözüm üretmek  
+- Frontend geliştirme becerilerini geliştirmek  
+- Kullanıcı odaklı bir arayüz tasarlamak  
+- Öğrenilen bilgileri gerçek bir ürüne dönüştürmek  
+
+amacıyla geliştirilmiştir.
 
 ## 🛠️ Teknolojiler
 
@@ -32,4 +40,10 @@ https://endergencturk.github.io/butce-takip-app/
 
 ## 📸 Ekran Görüntüsü
 
-(Yakında eklenecek)
+<img width="1902" height="912" alt="Bütçe Takip Uygulaması 2" src="https://github.com/user-attachments/assets/bda80d07-6f54-4eec-9032-8f1697581297" />
+
+---
+
+## 👨‍💻 Geliştirici
+
+**Ender Gençtürk**
