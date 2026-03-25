@@ -57,10 +57,69 @@
       grid-template-columns: 240px 1fr;
     }
 
+    .mobile-topbar {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 14px;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .mobile-brand {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .mobile-brand span {
+      color: #60a5fa;
+    }
+
+    .menu-toggle-btn {
+      border: none;
+      background: #0f172a;
+      color: white;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .sidebar-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.45);
+      z-index: 49;
+    }
+
     .sidebar {
       background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
       color: white;
       padding: 22px 16px;
+      position: relative;
+      z-index: 50;
+    }
+
+    .sidebar-close {
+      display: none;
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      border: none;
+      background: rgba(255,255,255,0.12);
+      color: white;
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .brand {
@@ -733,8 +792,36 @@
         grid-template-columns: 1fr;
       }
 
+      .mobile-topbar {
+        display: flex;
+      }
+
+      .sidebar-overlay.show {
+        display: block;
+      }
+
       .sidebar {
-        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(86vw, 320px);
+        height: 100vh;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.25s ease;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .sidebar-close {
+        display: block;
+      }
+
+      .brand {
+        padding-right: 40px;
       }
 
       .stats,
@@ -746,6 +833,23 @@
     @media (max-width: 640px) {
       .main {
         padding: 14px;
+      }
+
+      .topbar {
+        margin-top: 6px;
+      }
+
+      .title-wrap h1 {
+        font-size: 24px;
+      }
+
+      .toolbar-row {
+        width: 100%;
+      }
+
+      .toolbar-row .light-btn,
+      .toolbar-row .blue-btn {
+        flex: 1 1 auto;
       }
 
       .row-2,
@@ -764,12 +868,25 @@
         width: 100%;
         justify-content: space-between;
       }
+
+      .month-box {
+        width: 100%;
+        justify-content: space-between;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="mobile-topbar">
+    <button class="menu-toggle-btn" onclick="openSidebar()">☰ Menü</button>
+    <div class="mobile-brand"><span>Bütçe</span>Dostu</div>
+  </div>
+
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
   <div class="app">
-    <aside class="sidebar">
+    <aside class="sidebar" id="sidebar">
+      <button class="sidebar-close" onclick="closeSidebar()">×</button>
       <div class="brand"><span>Bütçe</span>Dostu</div>
 
       <div class="menu-card">
@@ -839,12 +956,12 @@
 
           <div class="stat-card">
             <div class="stat-label" data-i18n="monthlyIncome">Aylık Gelir</div>
-            <div class="stat-value" id="monthlyIncome">0 TL</div>
+            <div class="stat-value" id="monthlyIncomeValue">0 TL</div>
           </div>
 
           <div class="stat-card">
             <div class="stat-label" data-i18n="monthlyExpense">Aylık Gider</div>
-            <div class="stat-value" id="monthlyExpense">0 TL</div>
+            <div class="stat-value" id="monthlyExpenseValue">0 TL</div>
           </div>
         </section>
 
@@ -1208,6 +1325,16 @@
       localStorage.setItem("budget_lang", currentLang);
     }
 
+    function openSidebar() {
+      document.getElementById("sidebar").classList.add("open");
+      document.getElementById("sidebarOverlay").classList.add("show");
+    }
+
+    function closeSidebar() {
+      document.getElementById("sidebar").classList.remove("open");
+      document.getElementById("sidebarOverlay").classList.remove("show");
+    }
+
     function applyLanguage() {
       document.documentElement.lang = currentLang;
 
@@ -1262,12 +1389,12 @@
       return users.find(u => u.id === activeUserId) || users[0];
     }
 
-    function getCurrentMonthFilteredTransactions() {
+    function getMonthlyTransactions() {
       return transactions
-        .filter(t => {
-          const d = new Date(t.date);
+        .filter(tItem => {
+          const d = new Date(tItem.date);
           return (
-            t.userId === activeUserId &&
+            tItem.userId === activeUserId &&
             d.getMonth() === currentDate.getMonth() &&
             d.getFullYear() === currentDate.getFullYear()
           );
@@ -1275,12 +1402,28 @@
         .sort((a, b) => new Date(b.date) - new Date(a.date));
     }
 
+    function getPreviousMonthTransactions() {
+      const prevDate = new Date(currentDate);
+      prevDate.setMonth(prevDate.getMonth() - 1);
+
+      return transactions.filter(tItem => {
+        const d = new Date(tItem.date);
+        return (
+          tItem.userId === activeUserId &&
+          d.getMonth() === prevDate.getMonth() &&
+          d.getFullYear() === prevDate.getFullYear()
+        );
+      });
+    }
+
+    function getExportTransactions() {
+      return getMonthlyTransactions();
+    }
+
     function applyTheme() {
       document.body.classList.toggle("dark-mode", isDarkMode);
       const btn = document.getElementById("themeToggleBtn");
-      if (btn) {
-        btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
-      }
+      if (btn) btn.innerText = isDarkMode ? "☀️ Light" : "🌙 Dark";
     }
 
     function toggleDarkMode() {
@@ -1310,6 +1453,7 @@
           activeUserId = user.id;
           saveAll();
           renderAll();
+          closeSidebar();
         };
         box.appendChild(el);
       });
@@ -1338,6 +1482,7 @@
       input.value = "";
       saveAll();
       renderAll();
+      closeSidebar();
     }
 
     function renameActiveUser() {
@@ -1353,13 +1498,14 @@
         return u;
       });
 
-      transactions = transactions.map(t => {
-        if (t.userId === activeUserId) return { ...t, owner: newName };
-        return t;
+      transactions = transactions.map(tItem => {
+        if (tItem.userId === activeUserId) return { ...tItem, owner: newName };
+        return tItem;
       });
 
       saveAll();
       renderAll();
+      closeSidebar();
     }
 
     function deleteActiveUser() {
@@ -1373,11 +1519,12 @@
       if (!ok) return;
 
       users = users.filter(u => u.id !== activeUserId);
-      transactions = transactions.filter(t => t.userId !== activeUserId);
+      transactions = transactions.filter(tItem => tItem.userId !== activeUserId);
       activeUserId = users[0].id;
 
       saveAll();
       renderAll();
+      closeSidebar();
     }
 
     function renderCategories() {
@@ -1449,10 +1596,11 @@
       input.value = "";
       saveAll();
       renderAll();
+      closeSidebar();
     }
 
     function deleteCategory(name) {
-      const inUse = transactions.some(t => t.category === name);
+      const inUse = transactions.some(tItem => tItem.category === name);
       if (inUse) {
         alert(t("categoryInUse"));
         return;
@@ -1462,7 +1610,6 @@
       if (!ok) return;
 
       customCategories = customCategories.filter(c => c.name !== name);
-
       if (filterCategory === name) filterCategory = "ALL";
 
       saveAll();
@@ -1552,7 +1699,7 @@
     }
 
     function startEdit(id) {
-      const item = transactions.find(t => t.id === id);
+      const item = transactions.find(tItem => tItem.id === id);
       if (!item) return;
 
       editingId = id;
@@ -1567,6 +1714,7 @@
       document.getElementById("editModeBox").style.display = "block";
       document.getElementById("normalButtons").style.display = "none";
       document.getElementById("editButtons").style.display = "grid";
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     function updateTransaction() {
@@ -1613,33 +1761,6 @@
       renderAll();
     }
 
-    function getMonthlyTransactions() {
-      return transactions
-        .filter(tItem => {
-          const d = new Date(tItem.date);
-          return (
-            tItem.userId === activeUserId &&
-            d.getMonth() === currentDate.getMonth() &&
-            d.getFullYear() === currentDate.getFullYear()
-          );
-        })
-        .sort((a, b) => new Date(b.date) - new Date(a.date));
-    }
-
-    function getPreviousMonthTransactions() {
-      const prevDate = new Date(currentDate);
-      prevDate.setMonth(prevDate.getMonth() - 1);
-
-      return transactions.filter(tItem => {
-        const d = new Date(tItem.date);
-        return (
-          tItem.userId === activeUserId &&
-          d.getMonth() === prevDate.getMonth() &&
-          d.getFullYear() === prevDate.getFullYear()
-        );
-      });
-    }
-
     function getFilteredTransactionsForList(monthly) {
       return monthly.filter(tItem => {
         const matchesSearch = tItem.desc.toLowerCase().includes(searchText);
@@ -1647,10 +1768,6 @@
         const matchesCategory = filterCategory === "ALL" || tItem.category === filterCategory;
         return matchesSearch && matchesType && matchesCategory;
       });
-    }
-
-    function getExportTransactions() {
-      return getMonthlyTransactions();
     }
 
     function renderStats(monthly) {
@@ -1663,8 +1780,8 @@
       });
 
       document.getElementById("totalBalance").innerText = formatMoney(income - expense);
-      document.getElementById("monthlyIncome").innerText = formatMoney(income);
-      document.getElementById("monthlyExpense").innerText = formatMoney(expense);
+      document.getElementById("monthlyIncomeValue").innerText = formatMoney(income);
+      document.getElementById("monthlyExpenseValue").innerText = formatMoney(expense);
     }
 
     function renderInsights(monthly, previousMonthly) {
@@ -2000,6 +2117,12 @@
     });
 
     document.getElementById("importFile").addEventListener("change", importData);
+
+    window.addEventListener("resize", () => {
+      if (window.innerWidth > 900) {
+        closeSidebar();
+      }
+    });
 
     document.getElementById("date").value = new Date().toISOString().split("T")[0];
     applyTheme();
