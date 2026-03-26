@@ -2,7 +2,7 @@
 
 A clean, fast, multi-user budget tracking web app. Zero dependencies, zero installation — runs entirely in your browser.
 
-🔗 **Live Demo:** [endergencturk.github.io/butce-takip-app](https://endergencturk.github.io/butce-takip-app/?v=2)
+🔗 **Live Demo:** [endergencturk.github.io/BudgetPal-Personal-Budget-Tracker](https://endergencturk.github.io/BudgetPal-Personal-Budget-Tracker/)
 
 💰 **Get it on Gumroad:** [Buy BudgetPal — $9 one-time](https://endergenctuerk.gumroad.com/l/kdjums)
 
@@ -106,8 +106,8 @@ A clean, fast, multi-user budget tracking web app. Zero dependencies, zero insta
 No installation needed. Open `index.html` in your browser and start using it.
 
 ```bash
-git clone https://github.com/endergencturk/butce-takip-app.git
-cd butce-takip-app
+git clone https://github.com/endergencturk/BudgetPal-Personal-Budget-Tracker.git
+cd BudgetPal-Personal-Budget-Tracker
 # Open index.html in your browser
 ```
 
