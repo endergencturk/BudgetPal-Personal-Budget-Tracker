@@ -7,8 +7,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="BütçeDostu" />
-  <meta name="theme-color" content="#0d1117" />
-  <title>BütçeDostu v2</title>
+  <meta name="theme-color" content="#0d1117" id="themeColorMeta" />
+  <link rel="manifest" href="data:application/json,{}" id="manifestLink" />
+  <title>BütçeDostu</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -730,10 +731,171 @@
     /* ─── MOBILE PAGE SECTIONS ─── */
     /* Visibility is controlled 100% by JS applyMobPageVisibility() via inline display style */
     /* No CSS rule here — avoids race condition between CSS media query and JS */
+
+    /* ─── PWA INSTALL BANNER ─── */
+    .pwa-banner {
+      display: none;
+      position: fixed; bottom: calc(72px + max(8px, env(safe-area-inset-bottom)) + 8px);
+      left: 12px; right: 12px; z-index: 70;
+      background: linear-gradient(135deg, #0d1117, #1a2235);
+      border: 1px solid rgba(79,110,247,0.3);
+      border-radius: var(--radius); padding: 14px 16px;
+      box-shadow: var(--shadow-lg);
+      color: white;
+      animation: slideUpBanner 0.4s cubic-bezier(0.4,0,0.2,1);
+    }
+    @keyframes slideUpBanner {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .pwa-banner-row { display: flex; align-items: center; gap: 12px; }
+    .pwa-banner-icon { font-size: 28px; flex-shrink: 0; }
+    .pwa-banner-text { flex: 1; min-width: 0; }
+    .pwa-banner-title { font-size: 14px; font-weight: 700; margin-bottom: 2px; }
+    .pwa-banner-sub { font-size: 12px; color: rgba(255,255,255,0.55); }
+    .pwa-banner-btns { display: flex; gap: 8px; margin-top: 10px; }
+    .pwa-install-btn {
+      flex: 1; padding: 10px; border-radius: 10px; border: none;
+      background: var(--accent); color: white; font-family: var(--font);
+      font-size: 13px; font-weight: 700; cursor: pointer;
+    }
+    .pwa-dismiss-btn {
+      padding: 10px 14px; border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.15); background: transparent;
+      color: rgba(255,255,255,0.6); font-family: var(--font);
+      font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+
+    /* ─── NOTIFICATION BELL ─── */
+    .notif-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: var(--red); color: white;
+      font-size: 9px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      border: 2px solid var(--card);
+    }
+
+    /* ─── CURRENCY SELECTOR ─── */
+    .currency-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px;
+    }
+    .currency-opt {
+      padding: 8px 6px; border-radius: var(--radius-sm);
+      border: 1px solid var(--border); background: var(--card2);
+      text-align: center; cursor: pointer; transition: all 0.15s;
+      font-size: 12px; font-weight: 700; color: var(--text2);
+    }
+    .currency-opt:hover { border-color: var(--accent); color: var(--accent); }
+    .currency-opt.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+
+    /* ─── NOTE FIELD ─── */
+    .note-textarea {
+      width: 100%; background: var(--card2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 13px;
+      font-size: 13px; color: var(--text); font-family: var(--font);
+      outline: none; resize: none; transition: border-color 0.2s;
+      min-height: 68px; line-height: 1.5;
+    }
+    .note-textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+    .tx-note {
+      font-size: 11px; color: var(--muted); margin-top: 4px;
+      padding: 5px 8px; background: var(--card2); border-radius: 6px;
+      border-left: 2px solid var(--border2); line-height: 1.4;
+    }
+
+    /* ─── REMINDER MODAL ─── */
+    .reminder-list { display: grid; gap: 8px; margin-top: 10px; max-height: 260px; overflow-y: auto; }
+    .reminder-item {
+      display: flex; align-items: center; gap: 10px;
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 12px;
+    }
+    .reminder-icon { font-size: 18px; flex-shrink: 0; }
+    .reminder-body { flex: 1; min-width: 0; }
+    .reminder-title { font-size: 13px; font-weight: 600; }
+    .reminder-time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .reminder-del {
+      border: none; background: none; color: var(--muted);
+      cursor: pointer; font-size: 16px; padding: 4px; border-radius: 6px;
+      transition: all 0.15s;
+    }
+    .reminder-del:hover { background: var(--red-bg); color: var(--red); }
   </style>
 </head>
 <body>
 <div id="toastContainer" class="toast-container"></div>
+
+<!-- PWA INSTALL BANNER -->
+<div class="pwa-banner" id="pwaBanner">
+  <div class="pwa-banner-row">
+    <div class="pwa-banner-icon">💰</div>
+    <div class="pwa-banner-text">
+      <div class="pwa-banner-title">Ana Ekrana Ekle</div>
+      <div class="pwa-banner-sub">BütçeDostu'yu uygulama gibi kullan</div>
+    </div>
+    <button class="pwa-dismiss-btn" onclick="dismissPWA()">✕</button>
+  </div>
+  <div class="pwa-banner-btns">
+    <button class="pwa-install-btn" onclick="installPWA()" id="pwaInstallBtn">📲 Yükle</button>
+  </div>
+</div>
+
+<!-- REMINDERS MODAL -->
+<div id="remindersModal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('remindersModal')">×</button>
+    <h2 class="modal-title">🔔 Hatırlatıcılar</h2>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Yeni Hatırlatıcı</div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Başlık</label>
+          <input id="remTitle" class="form-input" placeholder="Örn: Fatura öde" />
+        </div>
+        <div class="row-2">
+          <div class="form-group">
+            <label class="form-label">Tarih</label>
+            <input id="remDate" class="form-input" type="date" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Saat</label>
+            <input id="remTime" class="form-input" type="time" value="09:00" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tekrar</label>
+          <select id="remRepeat" class="form-input">
+            <option value="once">Bir kez</option>
+            <option value="daily">Her gün</option>
+            <option value="weekly">Her hafta</option>
+            <option value="monthly">Her ay</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="addReminder()" style="margin-top:4px;">+ Hatırlatıcı Ekle</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">Aktif Hatırlatıcılar</div>
+      <div class="reminder-list" id="reminderList">
+        <div class="empty-state" style="padding:16px;">
+          <div class="empty-state-icon">🔕</div>
+          <div class="empty-state-text">Henüz hatırlatıcı yok</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="settings-section" style="border-bottom:none;padding-bottom:0;margin-bottom:0;">
+      <div class="settings-section-title">Bildirim İzni</div>
+      <button class="icon-btn" style="width:100%;" onclick="requestNotifPermission()" id="notifPermBtn">
+        🔔 Bildirim İzni Ver
+      </button>
+      <div id="notifStatus" style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center;"></div>
+    </div>
+  </div>
+</div>
 
 <!-- BOTTOM NAV (mobile) -->
 <nav class="bottom-nav" id="bottomNav">
@@ -798,6 +960,10 @@
         <input id="shTags" class="form-input" placeholder="tatil, araba..." autocomplete="off" />
       </div>
     </div>
+    <div class="form-group" style="margin-top:12px;">
+      <label class="form-label">Not <span style="color:var(--muted);font-weight:400;">(opsiyonel)</span></label>
+      <textarea id="shNote" class="note-textarea" placeholder="Bu işlem hakkında not ekle..."></textarea>
+    </div>
   </div>
 
   <div style="margin-top:14px;" id="shNormalBtns">
@@ -826,6 +992,18 @@
         <span id="labelLang">Dil</span>
         <button class="icon-btn" onclick="toggleLang()" id="langBtn">EN</button>
       </div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">💱 Para Birimi</div>
+      <div class="currency-grid" id="currencyGrid"></div>
+    </div>
+
+    <div class="settings-section">
+      <div class="settings-section-title">🔔 Hatırlatıcılar</div>
+      <button class="icon-btn" style="width:100%;" onclick="closeModal('settingsModal');openModal('remindersModal')">
+        🔔 Hatırlatıcıları Yönet
+      </button>
     </div>
 
     <div class="settings-section">
@@ -905,6 +1083,9 @@
             <span class="month-label" id="monthLabel">—</span>
             <button onclick="changeMonth(1)">›</button>
           </div>
+          <button class="icon-btn" onclick="openModal('remindersModal')" style="position:relative;" title="Hatırlatıcılar">
+            🔔 <span id="notifBellBadge" class="notif-badge" style="display:none;">!</span>
+          </button>
           <button class="icon-btn" onclick="openModal('settingsModal')" id="settingsBtn">⚙️ Ayarlar</button>
         </div>
       </div>
@@ -1067,6 +1248,11 @@
             <div class="form-group">
               <label class="form-label" id="lTags">Etiketler <span style="color:var(--muted);font-weight:400;">(virgülle ayır)</span></label>
               <input id="fTags" class="form-input" placeholder="tatil, araba, acil..." />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" id="lNote">Not <span style="color:var(--muted);font-weight:400;">(opsiyonel)</span></label>
+              <textarea id="fNote" class="note-textarea" placeholder="Bu işlem hakkında bir not ekle..."></textarea>
             </div>
 
             <div class="form-group">
@@ -1361,7 +1547,9 @@ let state = {
   activeId: ls("bd_active", "u1"),
   dark: ls("bd_dark", false),
   lang: ls("bd_lang", "tr"),
-  budgetGoals: ls("bd_goals", {}), // { userId_YYYY-MM: amount }
+  currency: ls("bd_currency", "TRY"),
+  budgetGoals: ls("bd_goals", {}),
+  reminders: ls("bd_reminders", []),
   currentDate: new Date(),
   editId: null,
   currentType: "EXPENSE",
@@ -1380,15 +1568,15 @@ let dailyChartInst = null, compareChartInst = null, yearlyChartInst = null;
 const T = k => (i18n[state.lang][k] || k);
 
 function fmt(n) {
-  return new Intl.NumberFormat(state.lang === "tr" ? "tr-TR" : "en-US", {
-    style: "currency", currency: "TRY", maximumFractionDigits: 0
-  }).format(n || 0);
+  const cur = state.currency || "TRY";
+  const locale = state.lang === "tr" ? "tr-TR" : "en-US";
+  return new Intl.NumberFormat(locale, { style: "currency", currency: cur, maximumFractionDigits: 0 }).format(n || 0);
 }
 
 function fmtFull(n) {
-  return new Intl.NumberFormat(state.lang === "tr" ? "tr-TR" : "en-US", {
-    style: "currency", currency: "TRY", maximumFractionDigits: 2
-  }).format(n || 0);
+  const cur = state.currency || "TRY";
+  const locale = state.lang === "tr" ? "tr-TR" : "en-US";
+  return new Intl.NumberFormat(locale, { style: "currency", currency: cur, maximumFractionDigits: 2 }).format(n || 0);
 }
 
 function monthKey(d) { return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
@@ -1425,7 +1613,9 @@ function saveState() {
   ss("bd_active", state.activeId);
   ss("bd_dark", state.dark);
   ss("bd_lang", state.lang);
+  ss("bd_currency", state.currency);
   ss("bd_goals", state.budgetGoals);
+  ss("bd_reminders", state.reminders);
 }
 
 // ─────────────────────────────────────────────────
@@ -1628,6 +1818,7 @@ function clearForm() {
   document.getElementById("fDesc").value = "";
   document.getElementById("fAmount").value = "";
   document.getElementById("fTags").value = "";
+  document.getElementById("fNote").value = "";
   document.getElementById("fInstall").checked = false;
   document.getElementById("installControls").style.display = "none";
   document.getElementById("instRange").value = 3; updateInstLabel();
@@ -1653,89 +1844,8 @@ function checkMonthlyGoalAlert() {
   else if (spent >= goal * 0.8) toast(`⚠️ ${T("budgetStatusWarn")}`, "warning");
 }
 
-function submitTx() {
-  const desc = document.getElementById("fDesc").value.trim();
-  const amount = parseFloat(document.getElementById("fAmount").value);
-  const date = document.getElementById("fDate").value;
-  const cat = document.getElementById("fCat").value;
-  const rawTags = document.getElementById("fTags").value;
 
-  if (!state.cats.length) return toast(T("addCatFirst"), "error");
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
 
-  const tags = rawTags.split(",").map(t => t.trim()).filter(Boolean);
-  const au = getActiveUser();
-  const isInst = document.getElementById("fInstall").checked;
-  const isRecur = document.getElementById("fRecurring").checked;
-
-  if (state.currentType === "EXPENSE" && isInst) {
-    const count = parseInt(document.getElementById("instRange").value);
-    const perMonth = +(amount / count).toFixed(2);
-    const start = new Date(date);
-    for (let i = 0; i < count; i++) {
-      const d = new Date(start.getFullYear(), start.getMonth() + i, start.getDate());
-      state.txs.push({ id: uid(), desc: `${desc} (${i+1}/${count})`, amount: perMonth, date: d.toISOString().split("T")[0], category: cat, type: "EXPENSE", userId: au.id, owner: au.name, tags, isInstallment: true });
-    }
-    toast(`${count} ${T("instAddedTxt")}`, "success");
-  } else if (isRecur) {
-    const period = document.getElementById("recurPeriod").value;
-    const endDateVal = document.getElementById("recurEnd").value;
-    const endDate = endDateVal ? new Date(endDateVal) : null;
-    const start = new Date(date);
-    let count = 0;
-    let d = new Date(start);
-    const maxIter = 120;
-    while (count < maxIter) {
-      if (endDate && d > endDate) break;
-      state.txs.push({ id: uid(), desc, amount, date: d.toISOString().split("T")[0], category: cat, type: state.currentType, userId: au.id, owner: au.name, tags, isRecurring: true, recurPeriod: period });
-      count++;
-      if (!endDate && count >= 12) break;
-      if (period === "monthly") d = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
-      else if (period === "weekly") d = new Date(d.getTime() + 7*86400000);
-      else if (period === "yearly") d = new Date(d.getFullYear()+1, d.getMonth(), d.getDate());
-    }
-    toast(`${count} ${T("recurAddedTxt")}`, "success");
-  } else {
-    state.txs.push({ id: uid(), desc, amount, date, category: cat, type: state.currentType, userId: au.id, owner: au.name, tags });
-    toast(T("savedOk"), "success");
-  }
-
-  saveState(); clearForm(); renderAll();
-  checkBudgetAlert(cat); checkMonthlyGoalAlert();
-}
-
-function startEdit(id) {
-  // On mobile: open bottom sheet; on desktop: fill inline form
-  if (typeof isMobile === 'function' && isMobile()) {
-    openEditSheet(id);
-    return;
-  }
-  const tx = state.txs.find(t => t.id === id); if (!tx) return;
-  state.editId = id; state.currentType = tx.type; setType(tx.type);
-  document.getElementById("fDesc").value = tx.desc;
-  document.getElementById("fAmount").value = tx.amount;
-  document.getElementById("fDate").value = tx.date;
-  renderCatSelect();
-  document.getElementById("fCat").value = tx.category;
-  document.getElementById("fTags").value = (tx.tags||[]).join(", ");
-  document.getElementById("editBanner").style.display = "block";
-  document.getElementById("editBanner").textContent = T("editModeBanner");
-  document.getElementById("normalBtns").style.display = "none";
-  document.getElementById("editBtns").style.display = "grid";
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function updateTx() {
-  const desc = document.getElementById("fDesc").value.trim();
-  const amount = parseFloat(document.getElementById("fAmount").value);
-  const date = document.getElementById("fDate").value;
-  const cat = document.getElementById("fCat").value;
-  const tags = document.getElementById("fTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
-  state.txs = state.txs.map(t => t.id === state.editId ? {...t, desc, amount, date, category: cat, tags, type: state.currentType} : t);
-  saveState(); cancelEdit(); renderAll(); toast(T("updatedOk"), "success");
-  checkBudgetAlert(cat); checkMonthlyGoalAlert();
-}
 
 function cancelEdit() {
   state.editId = null;
@@ -1924,6 +2034,8 @@ function chartColors() {
 function baseChartOptions(cc) {
   return {
     responsive: true, maintainAspectRatio: false,
+    animation: { duration: 600, easing: 'easeInOutQuart' },
+    transitions: { active: { animation: { duration: 200 } } },
     plugins: {
       legend: { display: false },
       tooltip: {
@@ -2048,6 +2160,7 @@ function renderTxList() {
     const dateStr = new Date(tx.date).toLocaleDateString(state.lang === "tr" ? "tr-TR" : "en-US");
     const catObj = state.cats.find(c => c.name === tx.category);
     const tagsHtml = tx.tags?.length ? `<div class="tx-tags">${tx.tags.map(t => `<span class="tag-pill">#${t}</span>`).join("")}</div>` : "";
+    const noteHtml = tx.note ? `<div class="tx-note">📝 ${tx.note}</div>` : "";
     const recurBadge = tx.isRecurring ? `<span class="stat-pill pill-purple">🔁</span>` : "";
     const instBadge = tx.isInstallment ? `<span class="stat-pill pill-blue">📅</span>` : "";
     const iconStyle = isIncome ? "income" : "";
@@ -2061,6 +2174,7 @@ function renderTxList() {
           <div class="tx-desc">${tx.desc}</div>
           <div class="tx-meta">${tx.category} · ${dateStr} ${recurBadge}${instBadge}</div>
           ${tagsHtml}
+          ${noteHtml}
         </div>
       </div>
       <div class="tx-right">
@@ -2379,6 +2493,8 @@ function openEditSheet(id) {
   document.getElementById("shDate").value = tx.date;
   document.getElementById("shCat").value = tx.category;
   document.getElementById("shTags").value = (tx.tags||[]).join(", ");
+  const shNoteEl = document.getElementById("shNote");
+  if (shNoteEl) shNoteEl.value = tx.note || "";
 
   const se = document.getElementById("shExpBtn"), si = document.getElementById("shIncBtn");
   if (tx.type === "INCOME") { si.classList.add("active"); se.classList.remove("active"); }
@@ -2401,37 +2517,7 @@ function closeAddSheet() {
   sheetEditId = null;
 }
 
-function submitSheetTx() {
-  const desc = document.getElementById("shDesc").value.trim();
-  const amount = parseFloat(document.getElementById("shAmount").value);
-  const date = document.getElementById("shDate").value;
-  const cat = document.getElementById("shCat").value;
-  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
 
-  if (!state.cats.length) return toast(T("addCatFirst"), "error");
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
-
-  const au = getActiveUser();
-  // Determine type from sheet buttons
-  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
-  state.txs.push({ id: uid(), desc, amount, date, category: cat, type, userId: au.id, owner: au.name, tags });
-  saveState(); renderAll(); closeAddSheet(); toast(T("savedOk"), "success");
-  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
-  checkBudgetAlert(cat); checkMonthlyGoalAlert();
-}
-
-function updateSheetTx() {
-  const desc = document.getElementById("shDesc").value.trim();
-  const amount = parseFloat(document.getElementById("shAmount").value);
-  const date = document.getElementById("shDate").value;
-  const cat = document.getElementById("shCat").value;
-  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
-
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
-  state.txs = state.txs.map(t => t.id === sheetEditId ? {...t, desc, amount, date, category: cat, tags, type} : t);
-  saveState(); renderAll(); closeAddSheet(); toast(T("updatedOk"), "success");
-}
 
 // Sheet type toggle syncs with main type
 document.getElementById("shExpBtn").addEventListener("click", () => {
@@ -2538,12 +2624,30 @@ function renderAll() {
   _renderAllBase();
   applyMobPageVisibility();
   syncMobLangBtn();
+
+  // Currency grid in settings
+  renderCurrencyGrid();
+
+  // Reminders list + bell badge
+  renderReminderList();
+
+  // Notification permission status
+  if ('Notification' in window) {
+    const s = document.getElementById('notifStatus');
+    if (s && !s.textContent) s.textContent =
+      Notification.permission === 'granted' ? '✅ Bildirim izni var' :
+      Notification.permission === 'denied'  ? '🚫 İzin reddedildi' : '';
+    const btn = document.getElementById('notifPermBtn');
+    if (btn && Notification.permission === 'granted') btn.textContent = '✅ İzin Verildi';
+  }
+
   // Sync bottom sheet cat select
   const shCat = document.getElementById("shCat");
   if (shCat) {
     shCat.innerHTML = "";
     state.cats.forEach(c => shCat.innerHTML += `<option value="${c.name}">${c.name}</option>`);
   }
+
   // Attach swipe-to-delete on mobile
   if (isMobile()) {
     setTimeout(() => {
@@ -2595,6 +2699,423 @@ function renderAll() {
     }
   }, { passive: true });
 })();
+
+// ─────────────────────────────────────────────────
+// CURRENCIES
+// ─────────────────────────────────────────────────
+const CURRENCIES = [
+  { code: "TRY", symbol: "₺", label: "Türk Lirası" },
+  { code: "USD", symbol: "$", label: "US Dollar" },
+  { code: "EUR", symbol: "€", label: "Euro" },
+  { code: "GBP", symbol: "£", label: "Pound" },
+  { code: "JPY", symbol: "¥", label: "Japanese Yen" },
+  { code: "CHF", symbol: "₣", label: "Swiss Franc" },
+  { code: "CAD", symbol: "C$", label: "Canadian Dollar" },
+  { code: "AUD", symbol: "A$", label: "Australian Dollar" },
+  { code: "SAR", symbol: "﷼", label: "Saudi Riyal" },
+];
+
+function renderCurrencyGrid() {
+  const grid = document.getElementById("currencyGrid");
+  if (!grid) return;
+  grid.innerHTML = "";
+  CURRENCIES.forEach(c => {
+    const btn = document.createElement("button");
+    btn.className = "currency-opt" + (state.currency === c.code ? " active" : "");
+    btn.innerHTML = `<div style="font-size:16px;">${c.symbol}</div><div>${c.code}</div>`;
+    btn.title = c.label;
+    btn.onclick = () => {
+      state.currency = c.code;
+      saveState();
+      renderCurrencyGrid();
+      renderAll();
+      toast(`Para birimi: ${c.code} ${c.symbol}`, "success");
+    };
+    grid.appendChild(btn);
+  });
+}
+
+// ─────────────────────────────────────────────────
+// NOTE — patch tx pushes to include note field
+// ─────────────────────────────────────────────────
+// Override renderTxList to search notes too
+// Patch submitTx and related — inject note into the most recently pushed tx
+function getNoteValue(desktopId, sheetId) {
+  const dEl = document.getElementById(desktopId);
+  const sEl = document.getElementById(sheetId);
+  if (dEl && dEl.value.trim()) return dEl.value.trim();
+  if (sEl && sEl.value.trim()) return sEl.value.trim();
+  return "";
+}
+
+// Override submitTx to attach note to last pushed tx(s)
+// Re-define submitTx properly
+function submitTx() {
+  const noteVal = document.getElementById("fNote")?.value.trim() || "";
+  const desc = document.getElementById("fDesc").value.trim();
+  const amount = parseFloat(document.getElementById("fAmount").value);
+  const date = document.getElementById("fDate").value;
+  const cat = document.getElementById("fCat").value;
+  const rawTags = document.getElementById("fTags").value;
+
+  if (!state.cats.length) return toast(T("addCatFirst"), "error");
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+
+  const tags = rawTags.split(",").map(t => t.trim()).filter(Boolean);
+  const au = getActiveUser();
+  const isInst = document.getElementById("fInstall").checked;
+  const isRecur = document.getElementById("fRecurring").checked;
+
+  if (state.currentType === "EXPENSE" && isInst) {
+    const count = parseInt(document.getElementById("instRange").value);
+    const perMonth = +(amount / count).toFixed(2);
+    const start = new Date(date);
+    for (let i = 0; i < count; i++) {
+      const d = new Date(start.getFullYear(), start.getMonth() + i, start.getDate());
+      state.txs.push({ id: uid(), desc: `${desc} (${i+1}/${count})`, amount: perMonth,
+        date: d.toISOString().split("T")[0], category: cat, type: "EXPENSE",
+        userId: au.id, owner: au.name, tags, note: noteVal, isInstallment: true });
+    }
+    toast(`${count} ${T("instAddedTxt")}`, "success");
+  } else if (isRecur) {
+    const period = document.getElementById("recurPeriod").value;
+    const endDateVal = document.getElementById("recurEnd").value;
+    const endDate = endDateVal ? new Date(endDateVal) : null;
+    const start = new Date(date);
+    let count = 0, d = new Date(start);
+    while (count < 120) {
+      if (endDate && d > endDate) break;
+      state.txs.push({ id: uid(), desc, amount, date: d.toISOString().split("T")[0],
+        category: cat, type: state.currentType, userId: au.id, owner: au.name,
+        tags, note: noteVal, isRecurring: true, recurPeriod: period });
+      count++;
+      if (!endDate && count >= 12) break;
+      if (period === "monthly") d = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
+      else if (period === "weekly") d = new Date(d.getTime() + 7*86400000);
+      else if (period === "yearly") d = new Date(d.getFullYear()+1, d.getMonth(), d.getDate());
+    }
+    toast(`${count} ${T("recurAddedTxt")}`, "success");
+  } else {
+    state.txs.push({ id: uid(), desc, amount, date, category: cat, type: state.currentType,
+      userId: au.id, owner: au.name, tags, note: noteVal });
+    toast(T("savedOk"), "success");
+  }
+  saveState(); clearForm(); renderAll();
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+// Patch updateTx with note
+function updateTx() {
+  const desc = document.getElementById("fDesc").value.trim();
+  const amount = parseFloat(document.getElementById("fAmount").value);
+  const date = document.getElementById("fDate").value;
+  const cat = document.getElementById("fCat").value;
+  const tags = document.getElementById("fTags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const note = document.getElementById("fNote")?.value.trim() || "";
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+  state.txs = state.txs.map(t => t.id === state.editId
+    ? {...t, desc, amount, date, category: cat, tags, note, type: state.currentType} : t);
+  saveState(); cancelEdit(); renderAll(); toast(T("updatedOk"), "success");
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+// Patch startEdit to populate note
+function startEdit(id) {
+  if (typeof isMobile === 'function' && isMobile()) {
+    openEditSheet(id); return;
+  }
+  const tx = state.txs.find(t => t.id === id); if (!tx) return;
+  state.editId = id; state.currentType = tx.type; setType(tx.type);
+  document.getElementById("fDesc").value = tx.desc;
+  document.getElementById("fAmount").value = tx.amount;
+  document.getElementById("fDate").value = tx.date;
+  renderCatSelect();
+  document.getElementById("fCat").value = tx.category;
+  document.getElementById("fTags").value = (tx.tags||[]).join(", ");
+  const noteEl = document.getElementById("fNote");
+  if (noteEl) noteEl.value = tx.note || "";
+  document.getElementById("editBanner").style.display = "block";
+  document.getElementById("editBanner").textContent = T("editModeBanner");
+  document.getElementById("normalBtns").style.display = "none";
+  document.getElementById("editBtns").style.display = "grid";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// Patch sheet tx functions with note
+function submitSheetTx() {
+  const desc = document.getElementById("shDesc").value.trim();
+  const amount = parseFloat(document.getElementById("shAmount").value);
+  const date = document.getElementById("shDate").value;
+  const cat = document.getElementById("shCat").value;
+  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const note = document.getElementById("shNote")?.value.trim() || "";
+  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
+
+  if (!state.cats.length) return toast(T("addCatFirst"), "error");
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+
+  const au = getActiveUser();
+  state.txs.push({ id: uid(), desc, amount, date, category: cat, type,
+    userId: au.id, owner: au.name, tags, note });
+  saveState(); renderAll(); closeAddSheet(); toast(T("savedOk"), "success");
+  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+function updateSheetTx() {
+  const desc = document.getElementById("shDesc").value.trim();
+  const amount = parseFloat(document.getElementById("shAmount").value);
+  const date = document.getElementById("shDate").value;
+  const cat = document.getElementById("shCat").value;
+  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const note = document.getElementById("shNote")?.value.trim() || "";
+  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
+
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+  state.txs = state.txs.map(t => t.id === sheetEditId
+    ? {...t, desc, amount, date, category: cat, tags, note, type} : t);
+  saveState(); renderAll(); closeAddSheet(); toast(T("updatedOk"), "success");
+}
+
+// Patch openEditSheet to fill note
+
+// ─────────────────────────────────────────────────
+// PWA — Service Worker + Install Prompt
+// ─────────────────────────────────────────────────
+let deferredInstallPrompt = null;
+
+// SW registration — only works when served over http/https (not blob/preview)
+function registerServiceWorker() {
+  if (!('serviceWorker' in navigator)) return;
+  // Only register in real deployment context (not blob preview)
+  const proto = location.protocol;
+  if (proto !== 'http:' && proto !== 'https:') {
+    console.log('SW skipped: preview environment');
+    return;
+  }
+  // Inline SW as blob — works on real http/https hosting
+  const swCode = `
+    const CACHE = 'butce-dostu-v3';
+    self.addEventListener('install', e => { self.skipWaiting(); });
+    self.addEventListener('activate', e => { self.clients.claim(); });
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+    });
+  `;
+  try {
+    const blob = new Blob([swCode], { type: 'application/javascript' });
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl)
+      .then(reg => { console.log('SW registered ✓'); window._swReg = reg; })
+      .catch(err => console.log('SW skipped:', err.message));
+  } catch(e) { console.log('SW unavailable'); }
+}
+
+// PWA Manifest inject
+function injectManifest() {
+  const manifest = {
+    name: "BütçeDostu",
+    short_name: "BütçeDostu",
+    description: "Kişisel bütçe takip uygulaması",
+    start_url: "./",
+    display: "standalone",
+    background_color: state.dark ? "#080c14" : "#f0f2f8",
+    theme_color: "#0d1117",
+    orientation: "portrait-primary",
+    icons: [
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1117'/><text y='.9em' font-size='80' x='10'>💰</text></svg>", sizes: "192x192", type: "image/svg+xml" },
+      { src: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230d1117'/><text y='.9em' font-size='80' x='10'>💰</text></svg>", sizes: "512x512", type: "image/svg+xml" }
+    ]
+  };
+  const blob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.getElementById('manifestLink');
+  if (link) link.href = url;
+}
+
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredInstallPrompt = e;
+  const banner = document.getElementById('pwaBanner');
+  if (banner && !ls('pwa_dismissed', false)) banner.style.display = 'block';
+});
+
+window.addEventListener('appinstalled', () => {
+  document.getElementById('pwaBanner').style.display = 'none';
+  toast('Uygulama yüklendi! 🎉', 'success');
+  deferredInstallPrompt = null;
+});
+
+function installPWA() {
+  if (!deferredInstallPrompt) {
+    toast(state.lang === 'tr'
+      ? 'Tarayıcı menüsünden "Ana ekrana ekle" seçeneğini kullan.'
+      : 'Use browser menu → "Add to Home Screen".', 'info');
+    return;
+  }
+  deferredInstallPrompt.prompt();
+  deferredInstallPrompt.userChoice.then(choice => {
+    if (choice.outcome === 'accepted') toast('Kurulum başlatıldı ✓', 'success');
+    deferredInstallPrompt = null;
+  });
+}
+
+function dismissPWA() {
+  document.getElementById('pwaBanner').style.display = 'none';
+  ss('pwa_dismissed', true);
+}
+
+// ─────────────────────────────────────────────────
+// NOTIFICATIONS & REMINDERS
+// ─────────────────────────────────────────────────
+function requestNotifPermission() {
+  if (!('Notification' in window)) {
+    updateNotifStatus('Bu tarayıcı bildirimleri desteklemiyor.'); return;
+  }
+  Notification.requestPermission().then(perm => {
+    updateNotifStatus(perm === 'granted'
+      ? '✅ Bildirim izni verildi'
+      : perm === 'denied' ? '🚫 Bildirim izni reddedildi' : '⏸ Henüz karar verilmedi');
+    const btn = document.getElementById('notifPermBtn');
+    if (btn) btn.textContent = perm === 'granted' ? '✅ İzin Verildi' : '🔔 Bildirim İzni Ver';
+  });
+}
+
+function updateNotifStatus(msg) {
+  const el = document.getElementById('notifStatus');
+  if (el) el.textContent = msg;
+}
+
+function sendNotification(title, body, icon = '💰') {
+  if (Notification.permission !== 'granted') return;
+  if ('serviceWorker' in navigator && window._swReg) {
+    window._swReg.showNotification(title, { body, icon });
+  } else {
+    new Notification(title, { body, icon });
+  }
+}
+
+function addReminder() {
+  const title = document.getElementById('remTitle').value.trim();
+  const date = document.getElementById('remDate').value;
+  const time = document.getElementById('remTime').value || '09:00';
+  const repeat = document.getElementById('remRepeat').value;
+
+  if (!title || !date) return toast('Başlık ve tarih gir.', 'error');
+
+  const reminder = {
+    id: uid(), title, date, time, repeat,
+    createdAt: new Date().toISOString(),
+    active: true
+  };
+  state.reminders.push(reminder);
+  saveState();
+  scheduleReminder(reminder);
+  renderReminderList();
+  document.getElementById('remTitle').value = '';
+  document.getElementById('remDate').value = '';
+  toast('Hatırlatıcı eklendi ✓', 'success');
+}
+
+function scheduleReminder(reminder) {
+  const targetTime = new Date(`${reminder.date}T${reminder.time}`).getTime();
+  const now = Date.now();
+  const delay = targetTime - now;
+  if (delay > 0 && delay < 7 * 24 * 60 * 60 * 1000) {
+    setTimeout(() => {
+      sendNotification('🔔 ' + reminder.title, `BütçeDostu hatırlatıcısı`);
+      toast(`🔔 ${reminder.title}`, 'info');
+    }, delay);
+  }
+}
+
+function deleteReminder(id) {
+  state.reminders = state.reminders.filter(r => r.id !== id);
+  saveState(); renderReminderList();
+  toast(T('deletedOk'), 'info');
+}
+
+function renderReminderList() {
+  const list = document.getElementById('reminderList');
+  if (!list) return;
+  if (!state.reminders.length) {
+    list.innerHTML = `<div class="empty-state" style="padding:16px;"><div class="empty-state-icon">🔕</div><div class="empty-state-text">${state.lang === 'tr' ? 'Henüz hatırlatıcı yok' : 'No reminders yet'}</div></div>`;
+    return;
+  }
+  list.innerHTML = "";
+  [...state.reminders].sort((a,b) => new Date(a.date+'T'+a.time) - new Date(b.date+'T'+b.time)).forEach(r => {
+    const dt = new Date(r.date + 'T' + r.time);
+    const isPast = dt < new Date();
+    const item = document.createElement('div');
+    item.className = 'reminder-item';
+    item.style.opacity = isPast ? '0.5' : '1';
+    const repeatMap = { once: '1x', daily: '↻ Gün', weekly: '↻ Hafta', monthly: '↻ Ay' };
+    item.innerHTML = `
+      <div class="reminder-icon">🔔</div>
+      <div class="reminder-body">
+        <div class="reminder-title">${r.title}</div>
+        <div class="reminder-time">${dt.toLocaleDateString(state.lang === 'tr' ? 'tr-TR' : 'en-US')} ${r.time} · ${repeatMap[r.repeat] || r.repeat}</div>
+      </div>
+      <button class="reminder-del" onclick="deleteReminder('${r.id}')">×</button>
+    `;
+    list.appendChild(item);
+  });
+
+  // Update bell badge
+  const upcoming = state.reminders.filter(r => new Date(r.date+'T'+r.time) > new Date());
+  const badge = document.getElementById('notifBellBadge');
+  if (badge) { badge.style.display = upcoming.length ? 'flex' : 'none'; badge.textContent = upcoming.length > 9 ? '9+' : upcoming.length; }
+}
+
+function checkDueReminders() {
+  const now = new Date();
+  state.reminders.forEach(r => {
+    if (!r.active) return;
+    const dt = new Date(r.date + 'T' + r.time);
+    const diff = Math.abs(now - dt);
+    if (diff < 60000) {
+      sendNotification('🔔 ' + r.title, 'BütçeDostu hatırlatıcısı');
+      if (r.repeat === 'once') {
+        r.active = false;
+      } else if (r.repeat === 'daily') {
+        const next = new Date(dt); next.setDate(next.getDate() + 1);
+        r.date = next.toISOString().split('T')[0];
+      } else if (r.repeat === 'weekly') {
+        const next = new Date(dt); next.setDate(next.getDate() + 7);
+        r.date = next.toISOString().split('T')[0];
+      } else if (r.repeat === 'monthly') {
+        const next = new Date(dt); next.setMonth(next.getMonth() + 1);
+        r.date = next.toISOString().split('T')[0];
+      }
+      saveState();
+    }
+  });
+}
+
+// Check reminders every minute
+setInterval(checkDueReminders, 60000);
+
+// ─────────────────────────────────────────────────
+// CHART ANIMATIONS — patch chart options
+// ─────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────
+// PATCH renderAll to include new features
+// ─────────────────────────────────────────────────
+
+// ─────────────────────────────────────────────────
+// INIT — new features
+// ─────────────────────────────────────────────────
+registerServiceWorker();
+injectManifest();
+
+// Schedule existing reminders on load
+state.reminders.forEach(r => { if (r.active !== false) scheduleReminder(r); });
+
+// Set reminder date default
+const remDateEl = document.getElementById('remDate');
+if (remDateEl) remDateEl.value = new Date().toISOString().split('T')[0];
 
 // ─────────────────────────────────────────────────
 // INIT
