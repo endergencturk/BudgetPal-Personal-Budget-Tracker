@@ -75,20 +75,16 @@ amacıyla geliştirilmiştir.
 
 Kurulum gerekmez. `index.html` dosyasını tarayıcıda aç, kullan.
 
-```bash
-git clone https://github.com/kullaniciadi/butce-dostu.git
+ https://github.com/kullaniciadi/butce-dostu.git
 cd butce-dostu
-# index.html dosyasını tarayıcıda aç
+
 ```
 
 ---
 
 ## 📸 Ekran Görüntüleri
 
-> *(İsteğe bağlı: buraya screenshot eklenebilir)*
+> <img width="960" height="416" alt="Bütçe Dostu" src="https://github.com/user-attachments/assets/a7a34385-13a2-4ff2-b30d-d041fd0adca2" />
+
 
 ---
-
-## 📄 Lisans
-
-MIT
