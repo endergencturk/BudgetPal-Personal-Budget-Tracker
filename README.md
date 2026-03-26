@@ -71,13 +71,9 @@ amacıyla geliştirilmiştir.
 
 ---
 
-## 📦 Kurulum
+## 📦 Demo
 
-Kurulum gerekmez. `index.html` dosyasını tarayıcıda aç, kullan.
-
- https://github.com/kullaniciadi/butce-dostu.git
-cd butce-dostu
-
+(https://endergencturk.github.io/butce-takip-app/?v=2)
 ```
 
 ---
