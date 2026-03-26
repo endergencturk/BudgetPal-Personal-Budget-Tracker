@@ -80,7 +80,9 @@ amacıyla geliştirilmiştir.
 
 ## 📸 Ekran Görüntüleri
 
-> <img width="960" height="416" alt="Bütçe Dostu" src="https://github.com/user-attachments/assets/a7a34385-13a2-4ff2-b30d-d041fd0adca2" />
+<img width="960" height="414" alt="image" src="https://github.com/user-attachments/assets/fe5713c4-bfd7-4ddc-bf88-8db38a45dbbc" />
+
+
 
 
 ---
