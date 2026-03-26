@@ -1209,6 +1209,7 @@
           </div>
           <button class="icon-btn" onclick="switchDesktopPage('report')" id="reportBtn">📑 Rapor</button>
           <button class="icon-btn" onclick="switchDesktopPage('plan')" id="planBtn">🗓 Plan</button>
+          <button class="icon-btn" onclick="goHome()" id="homeBtn" style="display:none;">🏠 Ana Sayfa</button>
           <button class="icon-btn" onclick="openModal('remindersModal')" style="position:relative;" title="Hatırlatıcılar">
             🔔 <span id="notifBellBadge" class="notif-badge" style="display:none;">!</span>
           </button>
@@ -2628,11 +2629,25 @@ function applyMobPageVisibility() {
     if (ac) ac.style.display = (typeof _activeDesktopExtra === "undefined" || _activeDesktopExtra === null) ? "" : "none";
     const fab = document.getElementById("fabBtn");
     if (fab) fab.style.display = "none";
-    // Highlight active desktop nav buttons
+    // Highlight active desktop nav buttons + show/hide home btn
     const reportBtn = document.getElementById("reportBtn");
     const planBtn = document.getElementById("planBtn");
-    if (reportBtn) { reportBtn.style.background = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "report") ? "var(--accent)" : ""; reportBtn.style.color = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "report") ? "white" : ""; }
-    if (planBtn) { planBtn.style.background = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "plan") ? "var(--accent)" : ""; planBtn.style.color = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "plan") ? "white" : ""; }
+    const homeBtn = document.getElementById("homeBtn");
+    const isExtra = typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra !== null;
+
+    if (reportBtn) {
+      const active = isExtra && _activeDesktopExtra === "report";
+      reportBtn.style.background = active ? "var(--accent)" : "";
+      reportBtn.style.color = active ? "white" : "";
+      reportBtn.style.borderColor = active ? "var(--accent)" : "";
+    }
+    if (planBtn) {
+      const active = isExtra && _activeDesktopExtra === "plan";
+      planBtn.style.background = active ? "var(--accent)" : "";
+      planBtn.style.color = active ? "white" : "";
+      planBtn.style.borderColor = active ? "var(--accent)" : "";
+    }
+    if (homeBtn) homeBtn.style.display = isExtra ? "" : "none";
     return;
   }
 
@@ -3660,6 +3675,11 @@ function switchDesktopPage(page) {
   applyMobPageVisibility();
   if (_activeDesktopExtra === "report") renderReportPage();
   if (_activeDesktopExtra === "plan") renderPlanPage();
+}
+
+function goHome() {
+  _activeDesktopExtra = null;
+  applyMobPageVisibility();
 }
 
 // ─────────────────────────────────────────────────
