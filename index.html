@@ -2,7 +2,12 @@
 <html lang="tr">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="BütçeDostu" />
+  <meta name="theme-color" content="#0d1117" />
   <title>BütçeDostu v2</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
@@ -561,6 +566,115 @@
     .toast.error { border-left-color: var(--red); }
     .toast.warning { border-left-color: var(--amber); }
 
+    /* ─── BOTTOM NAV (mobile only) ─── */
+    .bottom-nav {
+      display: none;
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+      box-shadow: 0 -4px 20px rgba(13,17,23,0.1);
+    }
+    .bottom-nav-inner { display: flex; justify-content: space-around; align-items: center; }
+    .bnav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 14px; border-radius: 12px; cursor: pointer;
+      transition: all 0.18s; border: none; background: none; color: var(--muted);
+      font-family: var(--font); min-width: 56px;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .bnav-item.active { color: var(--accent); }
+    .bnav-item.active .bnav-icon { background: var(--accent-bg); }
+    .bnav-icon {
+      width: 40px; height: 28px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; transition: background 0.18s;
+    }
+    .bnav-label { font-size: 10px; font-weight: 700; letter-spacing: 0.01em; }
+
+    /* ─── FAB ─── */
+    .fab {
+      display: none;
+      position: fixed; bottom: calc(72px + max(8px, env(safe-area-inset-bottom))); right: 18px;
+      z-index: 55;
+      width: 54px; height: 54px; border-radius: 999px;
+      background: linear-gradient(135deg, var(--accent), #7c5ef7);
+      color: white; border: none;
+      font-size: 26px; font-weight: 300;
+      cursor: pointer; box-shadow: 0 6px 20px rgba(79,110,247,0.45);
+      display: none; align-items: center; justify-content: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .fab:active { transform: scale(0.92); box-shadow: 0 3px 12px rgba(79,110,247,0.35); }
+
+    /* ─── MOBILE SECTION TABS ─── */
+    .mobile-section {
+      display: none;
+    }
+    .mobile-section.active { display: block; }
+
+    /* ─── SWIPE HINT ─── */
+    .swipe-hint {
+      display: none;
+      text-align: center; font-size: 11px; color: var(--muted2);
+      padding: 6px; margin-top: -8px; margin-bottom: 8px;
+    }
+
+    /* ─── PULL TO REFRESH indicator ─── */
+    .ptr-indicator {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      background: var(--accent); color: white;
+      height: 3px; transform: scaleX(0); transform-origin: left;
+      transition: transform 0.3s ease;
+    }
+
+    /* ─── MOBILE SHEET (bottom sheet modal) ─── */
+    .bottom-sheet-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,0.45); z-index: 150;
+      backdrop-filter: blur(3px);
+    }
+    .bottom-sheet-overlay.open { display: block; }
+    .bottom-sheet {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 151;
+      background: var(--card); border-radius: 22px 22px 0 0;
+      padding: 0 18px max(20px, env(safe-area-inset-bottom));
+      box-shadow: 0 -8px 40px rgba(0,0,0,0.18);
+      transform: translateY(100%);
+      transition: transform 0.32s cubic-bezier(0.4,0,0.2,1);
+      max-height: 92vh; overflow-y: auto;
+    }
+    .bottom-sheet.open { transform: translateY(0); }
+    .sheet-handle {
+      width: 36px; height: 4px; background: var(--border2);
+      border-radius: 999px; margin: 12px auto 16px;
+    }
+    .sheet-title { font-size: 17px; font-weight: 800; margin-bottom: 16px; }
+
+    /* ─── TOUCH IMPROVEMENTS ─── */
+    .tx-item { touch-action: pan-y; -webkit-user-select: none; user-select: none; }
+    .tx-item.swiping-left { transform: translateX(-60px) !important; }
+    .tx-item.swiped { position: relative; overflow: hidden; }
+    .tx-swipe-action {
+      position: absolute; right: 0; top: 0; bottom: 0;
+      background: var(--red); color: white;
+      display: flex; align-items: center; justify-content: center;
+      width: 60px; font-size: 18px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      transform: translateX(60px); transition: transform 0.2s;
+    }
+
+    /* ─── IMPROVED TOUCH TARGETS ─── */
+    @media (hover: none) and (pointer: coarse) {
+      .btn { min-height: 48px; font-size: 15px; }
+      .form-input { min-height: 48px; font-size: 16px; } /* prevents zoom on iOS */
+      select.form-input { font-size: 16px; }
+      .bnav-item { min-height: 44px; }
+      .tx-action-btn { min-height: 36px; min-width: 48px; font-size: 13px; }
+      .icon-btn { min-height: 44px; }
+      .type-toggle button { min-height: 44px; }
+    }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 1280px) {
       .stats-grid { grid-template-columns: repeat(2, 1fr); }
@@ -578,24 +692,123 @@
       .main { margin-left: 0; }
     }
     @media (max-width: 768px) {
-      .main { padding: 14px; }
+      .main { padding: 12px 12px calc(80px + max(8px, env(safe-area-inset-bottom))); }
       .stats-grid { grid-template-columns: 1fr 1fr; }
-      .insight-grid { grid-template-columns: 1fr; }
+      .insight-grid { grid-template-columns: 1fr 1fr; }
       .charts-grid { grid-template-columns: 1fr; }
       .analysis-layout { grid-template-columns: 1fr; }
       .goal-stats { grid-template-columns: 1fr 1fr 1fr; }
+      .bottom-nav { display: block; }
+      .fab { display: flex; }
+      .swipe-hint { display: block; }
+      /* hide desktop topbar actions, use bottom nav */
+      .topbar-actions .icon-btn[onclick="openModal('settingsModal')"] { display: none; }
+      /* scrollable horizontal stats on mobile */
+      .stats-grid { grid-template-columns: repeat(4, minmax(140px, 1fr)); overflow-x: auto; padding-bottom: 4px; }
+      .stats-grid::-webkit-scrollbar { height: 3px; }
+      .stats-grid::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
     }
     @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
+      .main { padding: 10px 10px calc(80px + max(8px, env(safe-area-inset-bottom))); }
+      .stats-grid { grid-template-columns: repeat(4, 150px); }
       .row-2 { grid-template-columns: 1fr; }
-      .tx-item { flex-direction: column; align-items: flex-start; }
-      .tx-right { width: 100%; justify-content: space-between; }
-      .topbar { flex-direction: column; align-items: flex-start; }
+      .tx-item { flex-direction: row; align-items: center; }
+      .tx-right { flex-direction: column; align-items: flex-end; gap: 4px; }
+      .topbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .month-nav { width: 100%; justify-content: space-between; }
+      .insight-grid { grid-template-columns: 1fr; }
+      .card { padding: 14px; }
+      .budget-goal-header { flex-direction: column; align-items: flex-start; }
+      .budget-goal-edit { width: 100%; }
+      .goal-input-inline { flex: 1; width: 100%; }
+      .chart-wrap { height: 180px; }
+      .page-title { font-size: 22px; }
+      /* Mobile section visibility */
+      .desktop-only { display: none !important; }
     }
+
+    /* ─── MOBILE PAGE SECTIONS ─── */
+    /* Visibility is controlled 100% by JS applyMobPageVisibility() via inline display style */
+    /* No CSS rule here — avoids race condition between CSS media query and JS */
   </style>
 </head>
 <body>
 <div id="toastContainer" class="toast-container"></div>
+
+<!-- BOTTOM NAV (mobile) -->
+<nav class="bottom-nav" id="bottomNav">
+  <div class="bottom-nav-inner">
+    <button class="bnav-item active" data-page="overview" onclick="switchMobPage('overview',this)">
+      <div class="bnav-icon">📊</div>
+      <span class="bnav-label" id="bnavOverview">Özet</span>
+    </button>
+    <button class="bnav-item" data-page="transactions" onclick="switchMobPage('transactions',this)">
+      <div class="bnav-icon">📋</div>
+      <span class="bnav-label" id="bnavTx">İşlemler</span>
+    </button>
+    <button class="bnav-item" data-page="analysis" onclick="switchMobPage('analysis',this)">
+      <div class="bnav-icon">📈</div>
+      <span class="bnav-label" id="bnavAnalysis">Analiz</span>
+    </button>
+    <button class="bnav-item" data-page="settings-page" onclick="switchMobPage('settings-page',this)">
+      <div class="bnav-icon">⚙️</div>
+      <span class="bnav-label" id="bnavSettings">Ayarlar</span>
+    </button>
+  </div>
+</nav>
+
+<!-- FAB -->
+<button class="fab" id="fabBtn" onclick="openAddSheet()" title="Yeni İşlem">+</button>
+
+<!-- BOTTOM SHEET: Add/Edit Transaction -->
+<div class="bottom-sheet-overlay" id="sheetOverlay" onclick="closeAddSheet()"></div>
+<div class="bottom-sheet" id="addSheet">
+  <div class="sheet-handle"></div>
+  <div class="sheet-title" id="sheetTitle">Yeni İşlem</div>
+
+  <div class="edit-banner" id="sheetEditBanner">✏️ Düzenleme modundasın</div>
+
+  <div class="type-toggle" style="margin-bottom:14px;">
+    <button id="shExpBtn" class="active expense" onclick="setType('EXPENSE')">💸 Gider</button>
+    <button id="shIncBtn" class="income" onclick="setType('INCOME')">💰 Gelir</button>
+  </div>
+
+  <div class="form-grid">
+    <div class="form-group">
+      <label class="form-label">Açıklama</label>
+      <input id="shDesc" class="form-input" placeholder="Örn: Market alışverişi" autocomplete="off" />
+    </div>
+    <div class="row-2">
+      <div class="form-group">
+        <label class="form-label">Tutar (₺)</label>
+        <input id="shAmount" class="form-input" type="number" placeholder="0.00" inputmode="decimal" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Kategori</label>
+        <select id="shCat" class="form-input"></select>
+      </div>
+    </div>
+    <div class="row-2">
+      <div class="form-group">
+        <label class="form-label">Tarih</label>
+        <input id="shDate" class="form-input" type="date" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Etiketler</label>
+        <input id="shTags" class="form-input" placeholder="tatil, araba..." autocomplete="off" />
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;" id="shNormalBtns">
+    <button class="btn btn-primary" onclick="submitSheetTx()">💾 Kaydet</button>
+  </div>
+  <div style="margin-top:14px; display:none;" id="shEditBtns" class="btn-row">
+    <button class="btn btn-success" onclick="updateSheetTx()">✔ Güncelle</button>
+    <button class="btn btn-secondary" onclick="closeAddSheet()">✖ İptal</button>
+  </div>
+  <div style="height: max(16px, env(safe-area-inset-bottom));"></div>
+</div>
 
 <!-- SETTINGS MODAL -->
 <div id="settingsModal" class="modal-overlay">
@@ -696,7 +909,8 @@
         </div>
       </div>
 
-      <!-- STATS -->
+      <!-- STATS — mob-overview -->
+      <div class="mob-page" id="mob-overview">
       <div class="stats-grid">
         <div class="stat-card hero">
           <div class="stat-label" id="lNetBalance">Net Bakiye</div>
@@ -774,6 +988,10 @@
         </div>
       </div>
 
+      </div><!-- /mob-overview -->
+
+      <!-- CHARTS + ANALYSIS — mob-analysis -->
+      <div class="mob-page" id="mob-analysis">
       <!-- CHARTS -->
       <div class="charts-grid" style="margin-bottom:18px;">
         <div class="card">
@@ -800,8 +1018,31 @@
           <div class="chart-wrap"><canvas id="yearlyChart"></canvas></div>
         </div>
       </div>
+      </div><!-- /mob-analysis (charts) -->
 
-      <!-- MAIN CONTENT -->
+      <!-- Category Analysis card — part of analysis page on mobile -->
+      <div class="mob-page" id="mob-analysis-cat">
+        <div class="card" style="margin-top:0;">
+          <div class="card-header">
+            <span class="card-title" id="lCatAnalysis">Kategori Analizi</span>
+          </div>
+          <div class="analysis-layout">
+            <div class="cat-analysis-list" id="catAnalysisList"></div>
+            <div class="donut-wrap">
+              <div class="donut" id="donut">
+                <div class="donut-center">
+                  <span class="donut-center-val" id="donutVal">—</span>
+                  <span class="donut-center-lbl" id="donutLbl">gider dağılımı</span>
+                </div>
+              </div>
+              <div class="donut-legend" id="donutLegend"></div>
+            </div>
+          </div>
+        </div>
+      </div><!-- /mob-analysis-cat -->
+
+      <!-- MAIN CONTENT — mob-transactions -->
+      <div class="mob-page" id="mob-transactions">
       <div class="content-layout">
         <!-- FORM CARD -->
         <div class="card">
@@ -900,21 +1141,22 @@
         <!-- RIGHT COL -->
         <div class="right-col">
 
-          <!-- CATEGORY ANALYSIS -->
-          <div class="card">
+          <!-- CATEGORY ANALYSIS — rendered by renderCatAnalysis() into shared IDs -->
+          <div class="card" id="catAnalysisDesktopCard">
             <div class="card-header">
-              <span class="card-title" id="lCatAnalysis">Kategori Analizi</span>
+              <span class="card-title" id="lCatAnalysisD">Kategori Analizi</span>
             </div>
             <div class="analysis-layout">
-              <div class="cat-analysis-list" id="catAnalysisList"></div>
+              <div class="cat-analysis-list" id="catAnalysisListD"></div>
               <div class="donut-wrap">
-                <div class="donut" id="donut">
-                  <div class="donut-center">
-                    <span class="donut-center-val" id="donutVal">—</span>
-                    <span class="donut-center-lbl" id="donutLbl">gider dağılımı</span>
+                <div class="donut" id="donutD" style="width:180px;height:180px;border-radius:50%;position:relative;background:var(--bg2);">
+                  <div style="content:'';position:absolute;inset:38px;background:var(--card);border-radius:50%;z-index:1;"></div>
+                  <div class="donut-center" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2;text-align:center;padding:0 16px;">
+                    <span style="font-size:13px;font-weight:700;" id="donutValD">—</span>
+                    <span style="font-size:10px;color:var(--muted);margin-top:2px;">gider dağılımı</span>
                   </div>
                 </div>
-                <div class="donut-legend" id="donutLegend"></div>
+                <div class="donut-legend" id="donutLegendD" style="margin-top:12px;display:grid;gap:6px;width:100%;"></div>
               </div>
             </div>
           </div>
@@ -939,6 +1181,43 @@
 
         </div>
       </div>
+      </div><!-- /mob-transactions -->
+
+      <!-- SETTINGS PAGE — mob-settings-page (mobile only) -->
+      <div class="mob-page" id="mob-settings-page">
+        <div class="card" style="margin-bottom:12px;">
+          <div class="card-title" style="margin-bottom:16px;">⚙️ Ayarlar</div>
+          <div class="settings-section">
+            <div class="settings-section-title">Görünüm & Dil</div>
+            <div class="settings-row">
+              <span>Tema</span>
+              <button class="icon-btn" onclick="toggleDark()" id="mobThemeBtn">🌙 Dark</button>
+            </div>
+            <div class="settings-row">
+              <span>Dil</span>
+              <button class="icon-btn" onclick="toggleLang()" id="mobLangBtn">EN</button>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Dışa Aktar</div>
+            <div class="export-grid">
+              <button class="export-btn" onclick="exportJSON()">📄 JSON</button>
+              <button class="export-btn" onclick="exportCSV()">📊 CSV</button>
+              <button class="export-btn" onclick="exportExcel()">📗 Excel</button>
+              <button class="export-btn" onclick="exportPDF()" style="grid-column:span 3;">📕 PDF Raporu</button>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Kullanıcı Yönetimi</div>
+            <button class="icon-btn" style="width:100%;" onclick="openSidebar()">👤 Kullanıcıları Yönet</button>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Yedek Yükle</div>
+            <button class="icon-btn" style="width:100%;" onclick="document.getElementById('importFile2').click()">⬆️ JSON İçe Aktar</button>
+            <input id="importFile2" type="file" accept=".json" style="display:none;" />
+          </div>
+        </div>
+      </div><!-- /mob-settings-page -->
 
     </div>
   </main>
@@ -1426,6 +1705,11 @@ function submitTx() {
 }
 
 function startEdit(id) {
+  // On mobile: open bottom sheet; on desktop: fill inline form
+  if (typeof isMobile === 'function' && isMobile()) {
+    openEditSheet(id);
+    return;
+  }
   const tx = state.txs.find(t => t.id === id); if (!tx) return;
   state.editId = id; state.currentType = tx.type; setType(tx.type);
   document.getElementById("fDesc").value = tx.desc;
@@ -1566,57 +1850,64 @@ function renderStats(monthly, prev) {
 // CATEGORY ANALYSIS
 // ─────────────────────────────────────────────────
 function renderCatAnalysis(monthly) {
-  const container = document.getElementById("catAnalysisList");
-  const donut = document.getElementById("donut");
-  const legend = document.getElementById("donutLegend");
-  container.innerHTML = ""; legend.innerHTML = "";
-
   const expenses = monthly.filter(t => t.type==="EXPENSE");
   const totalExp = expenses.reduce((s,t) => s+t.amount, 0);
   const catData = state.cats.map(c => ({ ...c, spent: expenses.filter(t => t.category===c.name).reduce((s,t) => s+t.amount, 0) }));
 
-  catData.forEach(c => {
-    const row = document.createElement("div"); row.className = "cat-analysis-row";
-    const pct = c.limit > 0 ? Math.min((c.spent/c.limit)*100, 100) : 0;
-    const over = c.limit > 0 && c.spent > c.limit;
-    row.innerHTML = `
-      <div class="cat-row-top">
-        <span style="font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;">
-          <span style="width:10px;height:10px;border-radius:50%;background:${c.color};display:inline-block;"></span>${c.name}
-        </span>
-        <div style="display:flex;align-items:center;gap:6px;">
-          <input type="number" value="${c.limit}" style="width:80px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-family:var(--font);font-size:12px;outline:none;" onchange="updateCatLimit('${c.name.replace(/'/g,"\\'")}',this.value)" />
-          ${over ? '<span class="stat-pill pill-red">⚠️</span>' : ''}
-        </div>
-      </div>
-      <div class="cat-row-meta">
-        <span>${fmt(c.spent)} / ${fmt(c.limit)}</span>
-        <span>${c.limit > 0 ? pct.toFixed(1)+'%' : ''}</span>
-      </div>
-      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${over?'var(--red)':c.color};"></div></div>
-    `;
-    container.appendChild(row);
-  });
+  // Helper to render into any container set
+  function renderInto(containerId, donutId, donutValId, donutLblId, legendId) {
+    const container = document.getElementById(containerId);
+    const donut = document.getElementById(donutId);
+    const legend = document.getElementById(legendId);
+    if (!container || !donut || !legend) return;
+    container.innerHTML = ""; legend.innerHTML = "";
 
-  const nonZero = catData.filter(c => c.spent > 0);
-  if (!nonZero.length || totalExp <= 0) {
-    donut.style.background = "var(--bg2)";
-    document.getElementById("donutVal").textContent = "—";
-    return;
+    catData.forEach(c => {
+      const row = document.createElement("div"); row.className = "cat-analysis-row";
+      const pct = c.limit > 0 ? Math.min((c.spent/c.limit)*100, 100) : 0;
+      const over = c.limit > 0 && c.spent > c.limit;
+      row.innerHTML = `
+        <div class="cat-row-top">
+          <span style="font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;">
+            <span style="width:10px;height:10px;border-radius:50%;background:${c.color};display:inline-block;"></span>${c.name}
+          </span>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <input type="number" value="${c.limit}" style="width:80px;padding:4px 8px;border-radius:6px;border:1px solid var(--border);background:var(--card2);color:var(--text);font-family:var(--font);font-size:12px;outline:none;" onchange="updateCatLimit('${c.name.replace(/'/g,"\\'")}',this.value)" />
+            ${over ? '<span class="stat-pill pill-red">⚠️</span>' : ''}
+          </div>
+        </div>
+        <div class="cat-row-meta">
+          <span>${fmt(c.spent)} / ${fmt(c.limit)}</span>
+          <span>${c.limit > 0 ? pct.toFixed(1)+'%' : ''}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${over?'var(--red)':c.color};"></div></div>
+      `;
+      container.appendChild(row);
+    });
+
+    const nonZero = catData.filter(c => c.spent > 0);
+    if (!nonZero.length || totalExp <= 0) {
+      donut.style.background = "var(--bg2)";
+      const dv = document.getElementById(donutValId); if (dv) dv.textContent = "—";
+      return;
+    }
+    let cur = 0;
+    const segs = nonZero.map(c => { const p = (c.spent/totalExp)*100; const s = cur; cur += p; return `${c.color} ${s}% ${cur}%`; });
+    donut.style.background = `conic-gradient(${segs.join(", ")})`;
+    const top = [...nonZero].sort((a,b) => b.spent-a.spent)[0];
+    const dv = document.getElementById(donutValId); if (dv) dv.textContent = top.name;
+    const dl = document.getElementById(donutLblId); if (dl) dl.textContent = T("lCatAnalysis").toLowerCase();
+    nonZero.slice(0,5).forEach(c => {
+      const li = document.createElement("div"); li.className = "legend-item";
+      li.innerHTML = `<span class="legend-dot" style="background:${c.color}"></span><span>${c.name} — ${fmt(c.spent)}</span>`;
+      legend.appendChild(li);
+    });
   }
 
-  let cur = 0;
-  const segs = nonZero.map(c => { const p = (c.spent/totalExp)*100; const s = cur; cur += p; return `${c.color} ${s}% ${cur}%`; });
-  donut.style.background = `conic-gradient(${segs.join(", ")})`;
-  const top = [...nonZero].sort((a,b) => b.spent-a.spent)[0];
-  document.getElementById("donutVal").textContent = top.name;
-  document.getElementById("donutLbl").textContent = T("lCatAnalysis").toLowerCase();
-
-  nonZero.slice(0,5).forEach(c => {
-    const li = document.createElement("div"); li.className = "legend-item";
-    li.innerHTML = `<span class="legend-dot" style="background:${c.color}"></span><span>${c.name} — ${fmt(c.spent)}</span>`;
-    legend.appendChild(li);
-  });
+  // Mobile container (mob-analysis-cat)
+  renderInto("catAnalysisList", "donut", "donutVal", "donutLbl", "donutLegend");
+  // Desktop container (right-col)
+  renderInto("catAnalysisListD", "donutD", "donutValD", null, "donutLegendD");
 }
 
 // ─────────────────────────────────────────────────
@@ -1762,7 +2053,7 @@ function renderTxList() {
     const iconStyle = isIncome ? "income" : "";
     const iconChar = isIncome ? "+" : (catObj ? catObj.name.charAt(0) : "?");
 
-    const item = document.createElement("div"); item.className = "tx-item";
+    const item = document.createElement("div"); item.className = "tx-item"; item.dataset.txid = tx.id;
     item.innerHTML = `
       <div class="tx-left">
         <div class="tx-icon ${iconStyle}" style="${catObj && !isIncome ? `background:${catObj.color}22;color:${catObj.color}` : ""}">${iconChar}</div>
@@ -1962,7 +2253,7 @@ function importData(e) {
 // ─────────────────────────────────────────────────
 // RENDER ALL
 // ─────────────────────────────────────────────────
-function renderAll() {
+function _renderAllBase() {
   applyLang();
   document.getElementById("monthLabel").textContent = getMonthLabel(state.currentDate);
   renderUsers();
@@ -1981,14 +2272,344 @@ function renderAll() {
 }
 
 // ─────────────────────────────────────────────────
+// MOBILE: BOTTOM NAV PAGE SWITCHING
+// ─────────────────────────────────────────────────
+let activeMobPage = "overview";
+
+function isMobile() { return window.innerWidth <= 768; }
+
+function switchMobPage(page, btn) {
+  activeMobPage = page;
+
+  // Update nav button states
+  document.querySelectorAll(".bnav-item").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
+
+  // On mobile: show/hide sections
+  if (isMobile()) {
+    applyMobPageVisibility();
+    // Re-render charts when switching to analysis tab (canvas needs visible container)
+    if (page === "analysis") {
+      setTimeout(() => {
+        renderDailyChart(currentMonthTxs());
+        renderComparisonChart();
+        renderYearlyChart();
+      }, 50);
+    }
+  }
+
+  // Haptic feedback on supported devices
+  if (navigator.vibrate) navigator.vibrate(8);
+
+  // Smooth scroll to top
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function applyMobPageVisibility() {
+  const mobile = isMobile();
+  const pages = ["overview", "transactions", "analysis", "settings-page"];
+
+  if (!mobile) {
+    // ── DESKTOP: show everything except mobile-only settings page ──
+    pages.forEach(p => {
+      const el = document.getElementById(`mob-${p}`);
+      if (el) el.style.display = (p === "settings-page") ? "none" : "";
+    });
+    const ac = document.getElementById("mob-analysis-cat");
+    if (ac) ac.style.display = "";
+    const fab = document.getElementById("fabBtn");
+    if (fab) fab.style.display = "none";
+    return;
+  }
+
+  // ── MOBILE: only active page visible ──
+  pages.forEach(p => {
+    const el = document.getElementById(`mob-${p}`);
+    if (el) el.style.display = (p === activeMobPage) ? "block" : "none";
+  });
+  const ac = document.getElementById("mob-analysis-cat");
+  if (ac) ac.style.display = (activeMobPage === "analysis") ? "block" : "none";
+  const fab = document.getElementById("fabBtn");
+  if (fab) fab.style.display = (activeMobPage === "overview" || activeMobPage === "transactions") ? "flex" : "none";
+  const mtb = document.getElementById("mobThemeBtn");
+  if (mtb) mtb.textContent = state.dark ? "☀️ Light" : "🌙 Dark";
+}
+
+// ─────────────────────────────────────────────────
+// MOBILE: BOTTOM SHEET (add/edit form)
+// ─────────────────────────────────────────────────
+let sheetEditId = null;
+
+function openAddSheet() {
+  sheetEditId = null;
+  document.getElementById("sheetEditBanner").style.display = "none";
+  document.getElementById("shNormalBtns").style.display = "";
+  document.getElementById("shEditBtns").style.display = "none";
+  document.getElementById("sheetTitle").textContent = state.lang === "tr" ? "Yeni İşlem" : "New Transaction";
+
+  // Sync category select
+  const shCat = document.getElementById("shCat"); shCat.innerHTML = "";
+  state.cats.forEach(c => shCat.innerHTML += `<option value="${c.name}">${c.name}</option>`);
+
+  // Reset sheet form
+  document.getElementById("shDesc").value = "";
+  document.getElementById("shAmount").value = "";
+  document.getElementById("shTags").value = "";
+  document.getElementById("shDate").value = new Date().toISOString().split("T")[0];
+
+  // Sync type buttons
+  const se = document.getElementById("shExpBtn"), si = document.getElementById("shIncBtn");
+  se.classList.add("active"); si.classList.remove("active");
+
+  document.getElementById("sheetOverlay").classList.add("open");
+  setTimeout(() => document.getElementById("addSheet").classList.add("open"), 10);
+  document.getElementById("shDesc").focus();
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function openEditSheet(id) {
+  const tx = state.txs.find(t => t.id === id); if (!tx) return;
+  sheetEditId = id;
+
+  const shCat = document.getElementById("shCat"); shCat.innerHTML = "";
+  state.cats.forEach(c => shCat.innerHTML += `<option value="${c.name}">${c.name}</option>`);
+
+  document.getElementById("shDesc").value = tx.desc;
+  document.getElementById("shAmount").value = tx.amount;
+  document.getElementById("shDate").value = tx.date;
+  document.getElementById("shCat").value = tx.category;
+  document.getElementById("shTags").value = (tx.tags||[]).join(", ");
+
+  const se = document.getElementById("shExpBtn"), si = document.getElementById("shIncBtn");
+  if (tx.type === "INCOME") { si.classList.add("active"); se.classList.remove("active"); }
+  else { se.classList.add("active"); si.classList.remove("active"); }
+  state.currentType = tx.type;
+
+  document.getElementById("sheetEditBanner").style.display = "block";
+  document.getElementById("shNormalBtns").style.display = "none";
+  document.getElementById("shEditBtns").style.display = "grid";
+  document.getElementById("sheetTitle").textContent = state.lang === "tr" ? "İşlemi Düzenle" : "Edit Transaction";
+
+  document.getElementById("sheetOverlay").classList.add("open");
+  setTimeout(() => document.getElementById("addSheet").classList.add("open"), 10);
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function closeAddSheet() {
+  document.getElementById("addSheet").classList.remove("open");
+  document.getElementById("sheetOverlay").classList.remove("open");
+  sheetEditId = null;
+}
+
+function submitSheetTx() {
+  const desc = document.getElementById("shDesc").value.trim();
+  const amount = parseFloat(document.getElementById("shAmount").value);
+  const date = document.getElementById("shDate").value;
+  const cat = document.getElementById("shCat").value;
+  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
+
+  if (!state.cats.length) return toast(T("addCatFirst"), "error");
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+
+  const au = getActiveUser();
+  // Determine type from sheet buttons
+  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
+  state.txs.push({ id: uid(), desc, amount, date, category: cat, type, userId: au.id, owner: au.name, tags });
+  saveState(); renderAll(); closeAddSheet(); toast(T("savedOk"), "success");
+  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+function updateSheetTx() {
+  const desc = document.getElementById("shDesc").value.trim();
+  const amount = parseFloat(document.getElementById("shAmount").value);
+  const date = document.getElementById("shDate").value;
+  const cat = document.getElementById("shCat").value;
+  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
+
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+  state.txs = state.txs.map(t => t.id === sheetEditId ? {...t, desc, amount, date, category: cat, tags, type} : t);
+  saveState(); renderAll(); closeAddSheet(); toast(T("updatedOk"), "success");
+}
+
+// Sheet type toggle syncs with main type
+document.getElementById("shExpBtn").addEventListener("click", () => {
+  document.getElementById("shExpBtn").classList.add("active");
+  document.getElementById("shIncBtn").classList.remove("active");
+  state.currentType = "EXPENSE";
+});
+document.getElementById("shIncBtn").addEventListener("click", () => {
+  document.getElementById("shIncBtn").classList.add("active");
+  document.getElementById("shExpBtn").classList.remove("active");
+  state.currentType = "INCOME";
+});
+
+// Sheet drag-to-close
+(function() {
+  const sheet = document.getElementById("addSheet");
+  let startY = 0, isDragging = false;
+
+  sheet.addEventListener("touchstart", e => {
+    // Only drag from handle
+    if (e.target.closest(".sheet-handle")) { startY = e.touches[0].clientY; isDragging = true; }
+  }, { passive: true });
+
+  sheet.addEventListener("touchmove", e => {
+    if (!isDragging) return;
+    const dy = e.touches[0].clientY - startY;
+    if (dy > 0) sheet.style.transform = `translateY(${dy}px)`;
+  }, { passive: true });
+
+  sheet.addEventListener("touchend", e => {
+    if (!isDragging) return;
+    isDragging = false;
+    const dy = e.changedTouches[0].clientY - startY;
+    if (dy > 100) { closeAddSheet(); }
+    sheet.style.transform = "";
+  });
+})();
+
+// ─────────────────────────────────────────────────
+// MOBILE: SWIPE-TO-DELETE on transactions
+// ─────────────────────────────────────────────────
+function attachSwipeDelete(itemEl, txId) {
+  let startX = 0, currentX = 0, swiping = false;
+  const threshold = 80;
+
+  itemEl.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+    currentX = startX;
+    swiping = false;
+  }, { passive: true });
+
+  itemEl.addEventListener("touchmove", e => {
+    currentX = e.touches[0].clientX;
+    const dx = startX - currentX;
+    if (dx > 10) {
+      swiping = true;
+      const clamped = Math.min(dx, threshold + 20);
+      itemEl.style.transform = `translateX(-${clamped}px)`;
+      itemEl.style.transition = "none";
+    }
+  }, { passive: true });
+
+  itemEl.addEventListener("touchend", () => {
+    if (!swiping) return;
+    itemEl.style.transition = "transform 0.25s ease";
+    const dx = startX - currentX;
+    if (dx >= threshold) {
+      // Confirm delete with vibration
+      if (navigator.vibrate) navigator.vibrate([20, 40, 20]);
+      itemEl.style.transform = `translateX(-100%)`;
+      itemEl.style.opacity = "0";
+      setTimeout(() => {
+        state.txs = state.txs.filter(t => t.id !== txId);
+        saveState(); renderAll(); toast(T("deletedOk"), "info");
+      }, 220);
+    } else {
+      itemEl.style.transform = "";
+    }
+    swiping = false;
+  });
+}
+
+// Override renderTxList: no-op (swipe handled in renderAll)
+// ─────────────────────────────────────────────────
+// MOBILE: import file2 handler
+// ─────────────────────────────────────────────────
+const importFile2el = document.getElementById("importFile2");
+if (importFile2el) importFile2el.addEventListener("change", importData);
+
+// ─────────────────────────────────────────────────
+// MOBILE: lang/theme button sync
+// ─────────────────────────────────────────────────
+function syncMobLangBtn() {
+  const mb = document.getElementById("mobLangBtn");
+  if (mb) mb.textContent = state.lang === "tr" ? "EN" : "TR";
+  const mtb = document.getElementById("mobThemeBtn");
+  if (mtb) mtb.textContent = state.dark ? "☀️ Light" : "🌙 Dark";
+}
+
+// ─────────────────────────────────────────────────
+// RENDER ALL — single unified function
+// ─────────────────────────────────────────────────
+function renderAll() {
+  _renderAllBase();
+  applyMobPageVisibility();
+  syncMobLangBtn();
+  // Sync bottom sheet cat select
+  const shCat = document.getElementById("shCat");
+  if (shCat) {
+    shCat.innerHTML = "";
+    state.cats.forEach(c => shCat.innerHTML += `<option value="${c.name}">${c.name}</option>`);
+  }
+  // Attach swipe-to-delete on mobile
+  if (isMobile()) {
+    setTimeout(() => {
+      document.querySelectorAll(".tx-item[data-txid]").forEach(el => {
+        if (!el._swipeAttached) {
+          el._swipeAttached = true;
+          attachSwipeDelete(el, el.dataset.txid);
+        }
+      });
+    }, 50);
+  }
+}
+
+// ─────────────────────────────────────────────────
+// MOBILE: SWIPE LEFT/RIGHT between pages
+// ─────────────────────────────────────────────────
+(function() {
+  const pages = ["overview", "transactions", "analysis", "settings-page"];
+  let touchStartX = 0, touchStartY = 0;
+
+  document.addEventListener("touchstart", e => {
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  document.addEventListener("touchend", e => {
+    if (!isMobile()) return;
+    // Don't interfere with sheet or sidebar
+    if (document.getElementById("addSheet").classList.contains("open")) return;
+    if (document.getElementById("sidebar").classList.contains("open")) return;
+
+    const dx = touchStartX - e.changedTouches[0].clientX;
+    const dy = Math.abs(touchStartY - e.changedTouches[0].clientY);
+
+    // Only horizontal swipes (dx > dy) with enough distance
+    if (Math.abs(dx) < 60 || dy > 80) return;
+
+    const idx = pages.indexOf(activeMobPage);
+    if (dx > 0 && idx < pages.length - 1) {
+      // Swipe left → next page
+      const nextPage = pages[idx + 1];
+      const nextBtn = document.querySelector(`[data-page="${nextPage}"]`);
+      switchMobPage(nextPage, nextBtn);
+    } else if (dx < 0 && idx > 0) {
+      // Swipe right → prev page
+      const prevPage = pages[idx - 1];
+      const prevBtn = document.querySelector(`[data-page="${prevPage}"]`);
+      switchMobPage(prevPage, prevBtn);
+    }
+  }, { passive: true });
+})();
+
+// ─────────────────────────────────────────────────
 // INIT
 // ─────────────────────────────────────────────────
-document.getElementById("searchInput").addEventListener("input", renderTxList);
+document.getElementById("searchInput").addEventListener("input", renderAll);
 document.getElementById("importFile").addEventListener("change", importData);
-window.addEventListener("resize", () => { if (window.innerWidth > 900) closeSidebar(); });
+
+window.addEventListener("resize", () => {
+  if (window.innerWidth > 900) closeSidebar();
+  applyMobPageVisibility();
+});
 
 applyTheme();
 document.getElementById("fDate").value = new Date().toISOString().split("T")[0];
+document.getElementById("shDate").value = new Date().toISOString().split("T")[0];
 setType("EXPENSE");
 renderAll();
 </script>
