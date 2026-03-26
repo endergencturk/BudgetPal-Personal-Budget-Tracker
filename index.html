@@ -905,6 +905,40 @@
       .plan-row { grid-template-columns: 1fr; }
       .plan-diff { text-align: left; }
     }
+
+    /* ─── ANOMALY DETECTION ─── */
+    .anomaly-banner {
+      background: rgba(240,76,101,0.08); border: 1px solid rgba(240,76,101,0.25);
+      border-radius: var(--radius); padding: 14px 18px; margin-bottom: 18px;
+      display: none;
+    }
+    .anomaly-banner.show { display: block; }
+    .anomaly-banner-title { font-size: 14px; font-weight: 700; color: var(--red); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .anomaly-list { display: grid; gap: 6px; }
+    .anomaly-item { display: flex; justify-content: space-between; align-items: center; font-size: 13px; padding: 6px 10px; background: var(--card); border-radius: 8px; border: 1px solid var(--border); }
+    .anomaly-item-left { display: flex; align-items: center; gap: 8px; }
+    .anomaly-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); flex-shrink: 0; }
+    .anomaly-pct { font-size: 11px; font-weight: 700; color: var(--red); background: var(--red-bg); padding: 2px 7px; border-radius: 6px; }
+
+    /* ─── TX CURRENCY BADGE ─── */
+    .tx-currency-badge { font-size: 10px; font-weight: 700; color: var(--accent); background: var(--accent-bg); border: 1px solid var(--accent-border); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+
+    /* ─── SHARE MODAL ─── */
+    .share-code-box {
+      background: var(--card2); border: 1px solid var(--border); border-radius: var(--radius-sm);
+      padding: 12px 14px; font-family: var(--mono); font-size: 12px;
+      word-break: break-all; line-height: 1.6; color: var(--muted); max-height: 120px; overflow-y: auto;
+      margin: 10px 0;
+    }
+    .share-qr { display: flex; justify-content: center; margin: 14px 0; }
+    .share-qr canvas { border-radius: 10px; }
+    .import-drop {
+      border: 2px dashed var(--border2); border-radius: var(--radius);
+      padding: 28px; text-align: center; cursor: pointer; transition: all 0.2s;
+      color: var(--muted); font-size: 13px;
+    }
+    .import-drop:hover, .import-drop.drag-over { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
+    .import-drop-icon { font-size: 32px; margin-bottom: 8px; }
   </style>
 </head>
 <body>
@@ -1059,8 +1093,11 @@
     </div>
     <div class="row-2">
       <div class="form-group">
-        <label class="form-label">Tutar (₺)</label>
-        <input id="shAmount" class="form-input" type="number" placeholder="0.00" inputmode="decimal" />
+        <label class="form-label">Tutar</label>
+        <div style="display:flex;gap:6px;">
+          <input id="shAmount" class="form-input" type="number" placeholder="0.00" inputmode="decimal" style="flex:1;min-width:0;" />
+          <select id="shTxCurrency" class="form-input" style="width:80px;padding:10px 6px;"></select>
+        </div>
       </div>
       <div class="form-group">
         <label class="form-label">Kategori</label>
@@ -1148,6 +1185,40 @@
   </div>
 </div>
 
+<!-- SHARE / IMPORT MODAL -->
+<div id="shareModal" class="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('shareModal')">×</button>
+    <h2 class="modal-title">👥 Paylaş & İçe Aktar</h2>
+
+    <div class="settings-section">
+      <div class="settings-section-title">📤 Bütçeni Paylaş</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Bu kodla arkadaşın senin kategori ve işlemlerini kendi cihazına aktarabilir.</p>
+      <div class="export-grid" style="grid-template-columns:1fr 1fr;margin-bottom:10px;">
+        <button class="export-btn" onclick="generateShareCode('month')">📅 Bu Ayı Paylaş</button>
+        <button class="export-btn" onclick="generateShareCode('all')">📦 Tümünü Paylaş</button>
+      </div>
+      <div id="shareCodeBox" class="share-code-box" style="display:none;"></div>
+      <div id="shareActions" style="display:none;margin-top:8px;display:none;">
+        <button class="btn btn-primary" onclick="copyShareCode()" style="margin-bottom:8px;">📋 Kodu Kopyala</button>
+        <button class="btn btn-secondary" onclick="shareViaWebShare()">🔗 Paylaş</button>
+      </div>
+    </div>
+
+    <div class="settings-section" style="border-bottom:none;padding-bottom:0;margin-bottom:0;">
+      <div class="settings-section-title">📥 Arkadaştan Al</div>
+      <p style="font-size:13px;color:var(--muted);margin-bottom:10px;">Arkadaşının paylaştığı kodu yapıştır veya dosyayı sürükle bırak.</p>
+      <textarea id="importCodeInput" class="note-textarea" placeholder="Paylaşım kodunu buraya yapıştır..." style="min-height:80px;margin-bottom:8px;"></textarea>
+      <button class="btn btn-primary" onclick="importFromCode()" style="margin-bottom:10px;">⬆️ İçe Aktar</button>
+      <div class="import-drop" id="importDrop" onclick="document.getElementById('importDropFile').click()">
+        <div class="import-drop-icon">📂</div>
+        <div>JSON dosyasını sürükle bırak veya tıkla</div>
+      </div>
+      <input id="importDropFile" type="file" accept=".json" style="display:none;" />
+    </div>
+  </div>
+</div>
+
 <!-- MOBILE OVERLAY -->
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
 
@@ -1209,6 +1280,7 @@
           </div>
           <button class="icon-btn" onclick="switchDesktopPage('report')" id="reportBtn">📑 Rapor</button>
           <button class="icon-btn" onclick="switchDesktopPage('plan')" id="planBtn">🗓 Plan</button>
+          <button class="icon-btn" onclick="openModal('shareModal')">👥 Paylaş</button>
           <button class="icon-btn" onclick="goHome()" id="homeBtn" style="display:none;">🏠 Ana Sayfa</button>
           <button class="icon-btn" onclick="openModal('remindersModal')" style="position:relative;" title="Hatırlatıcılar">
             🔔 <span id="notifBellBadge" class="notif-badge" style="display:none;">!</span>
@@ -1219,6 +1291,13 @@
 
       <!-- STATS — mob-overview -->
       <div class="mob-page" id="mob-overview">
+
+      <!-- ANOMALY BANNER -->
+      <div class="anomaly-banner" id="anomalyBanner">
+        <div class="anomaly-banner-title">⚠️ Alışılmadık Harcama Tespit Edildi</div>
+        <div class="anomaly-list" id="anomalyList"></div>
+      </div>
+
       <div class="stats-grid">
         <div class="stat-card hero">
           <div class="stat-label" id="lNetBalance">Net Bakiye</div>
@@ -1383,8 +1462,11 @@
             </div>
 
             <div class="form-group">
-              <label class="form-label" id="lAmount">Tutar (₺)</label>
-              <input id="fAmount" class="form-input" type="number" placeholder="0.00" min="0" step="0.01" />
+              <label class="form-label" id="lAmount">Tutar</label>
+              <div style="display:flex;gap:8px;">
+                <input id="fAmount" class="form-input" type="number" placeholder="0.00" min="0" step="0.01" style="flex:1;" />
+                <select id="fTxCurrency" class="form-input" style="width:90px;padding:10px 8px;" title="Para birimi"></select>
+              </div>
             </div>
 
             <div class="row-2">
@@ -2348,6 +2430,8 @@ function renderTxList() {
     const noteHtml = tx.note ? `<div class="tx-note">📝 ${tx.note}</div>` : "";
     const recurBadge = tx.isRecurring ? `<span class="stat-pill pill-purple">🔁</span>` : "";
     const instBadge = tx.isInstallment ? `<span class="stat-pill pill-blue">📅</span>` : "";
+    const curBadge = (tx.txCurrency && tx.txCurrency !== state.currency && tx.origAmount)
+      ? `<span class="tx-currency-badge">${tx.origAmount % 1 === 0 ? tx.origAmount : tx.origAmount.toFixed(2)} ${tx.txCurrency}</span>` : "";
     const iconStyle = isIncome ? "income" : "";
     const iconChar = isIncome ? "+" : (catObj ? catObj.name.charAt(0) : "?");
 
@@ -2357,7 +2441,7 @@ function renderTxList() {
         <div class="tx-icon ${iconStyle}" style="${catObj && !isIncome ? `background:${catObj.color}22;color:${catObj.color}` : ""}">${iconChar}</div>
         <div class="tx-body">
           <div class="tx-desc">${tx.desc}</div>
-          <div class="tx-meta">${tx.category} · ${dateStr} ${recurBadge}${instBadge}</div>
+          <div class="tx-meta">${tx.category} · ${dateStr} ${recurBadge}${instBadge}${curBadge}</div>
           ${tagsHtml}
           ${noteHtml}
         </div>
@@ -2843,6 +2927,12 @@ function renderAll() {
   // Currency grid in settings
   renderCurrencyGrid();
 
+  // Tx-level currency selects
+  renderTxCurrencySelects();
+
+  // Anomaly detection
+  detectAnomalies();
+
   // Reminders list + bell badge
   renderReminderList();
 
@@ -2860,7 +2950,7 @@ function renderAll() {
   const pinBtn = document.getElementById('pinSettingsBtn');
   if (pinBtn) pinBtn.textContent = (state.pinEnabled && state.pin) ? '🔐 PIN Kaldır / Değiştir' : '🔐 PIN Ayarla';
 
-  // Render report/plan pages if currently visible
+  // Report / Plan pages if visible
   renderReportPage();
   renderPlanPage();
 
@@ -2973,59 +3063,6 @@ function getNoteValue(desktopId, sheetId) {
 
 // Override submitTx to attach note to last pushed tx(s)
 // Re-define submitTx properly
-function submitTx() {
-  const noteVal = document.getElementById("fNote")?.value.trim() || "";
-  const desc = document.getElementById("fDesc").value.trim();
-  const amount = parseFloat(document.getElementById("fAmount").value);
-  const date = document.getElementById("fDate").value;
-  const cat = document.getElementById("fCat").value;
-  const rawTags = document.getElementById("fTags").value;
-
-  if (!state.cats.length) return toast(T("addCatFirst"), "error");
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
-
-  const tags = rawTags.split(",").map(t => t.trim()).filter(Boolean);
-  const au = getActiveUser();
-  const isInst = document.getElementById("fInstall").checked;
-  const isRecur = document.getElementById("fRecurring").checked;
-
-  if (state.currentType === "EXPENSE" && isInst) {
-    const count = parseInt(document.getElementById("instRange").value);
-    const perMonth = +(amount / count).toFixed(2);
-    const start = new Date(date);
-    for (let i = 0; i < count; i++) {
-      const d = new Date(start.getFullYear(), start.getMonth() + i, start.getDate());
-      state.txs.push({ id: uid(), desc: `${desc} (${i+1}/${count})`, amount: perMonth,
-        date: d.toISOString().split("T")[0], category: cat, type: "EXPENSE",
-        userId: au.id, owner: au.name, tags, note: noteVal, isInstallment: true });
-    }
-    toast(`${count} ${T("instAddedTxt")}`, "success");
-  } else if (isRecur) {
-    const period = document.getElementById("recurPeriod").value;
-    const endDateVal = document.getElementById("recurEnd").value;
-    const endDate = endDateVal ? new Date(endDateVal) : null;
-    const start = new Date(date);
-    let count = 0, d = new Date(start);
-    while (count < 120) {
-      if (endDate && d > endDate) break;
-      state.txs.push({ id: uid(), desc, amount, date: d.toISOString().split("T")[0],
-        category: cat, type: state.currentType, userId: au.id, owner: au.name,
-        tags, note: noteVal, isRecurring: true, recurPeriod: period });
-      count++;
-      if (!endDate && count >= 12) break;
-      if (period === "monthly") d = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
-      else if (period === "weekly") d = new Date(d.getTime() + 7*86400000);
-      else if (period === "yearly") d = new Date(d.getFullYear()+1, d.getMonth(), d.getDate());
-    }
-    toast(`${count} ${T("recurAddedTxt")}`, "success");
-  } else {
-    state.txs.push({ id: uid(), desc, amount, date, category: cat, type: state.currentType,
-      userId: au.id, owner: au.name, tags, note: noteVal });
-    toast(T("savedOk"), "success");
-  }
-  saveState(); clearForm(); renderAll();
-  checkBudgetAlert(cat); checkMonthlyGoalAlert();
-}
 
 // Patch updateTx with note
 function updateTx() {
@@ -3065,25 +3102,6 @@ function startEdit(id) {
 }
 
 // Patch sheet tx functions with note
-function submitSheetTx() {
-  const desc = document.getElementById("shDesc").value.trim();
-  const amount = parseFloat(document.getElementById("shAmount").value);
-  const date = document.getElementById("shDate").value;
-  const cat = document.getElementById("shCat").value;
-  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
-  const note = document.getElementById("shNote")?.value.trim() || "";
-  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
-
-  if (!state.cats.length) return toast(T("addCatFirst"), "error");
-  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
-
-  const au = getActiveUser();
-  state.txs.push({ id: uid(), desc, amount, date, category: cat, type,
-    userId: au.id, owner: au.name, tags, note });
-  saveState(); renderAll(); closeAddSheet(); toast(T("savedOk"), "success");
-  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
-  checkBudgetAlert(cat); checkMonthlyGoalAlert();
-}
 
 function updateSheetTx() {
   const desc = document.getElementById("shDesc").value.trim();
@@ -3754,6 +3772,300 @@ renderAll();
 if (state.pinEnabled && state.pin) {
   lockApp();
 }
+
+// ─────────────────────────────────────────────────
+// TX-LEVEL CURRENCY SELECTOR
+// ─────────────────────────────────────────────────
+function renderTxCurrencySelects() {
+  ["fTxCurrency", "shTxCurrency"].forEach(id => {
+    const sel = document.getElementById(id);
+    if (!sel) return;
+    const cur = sel.value || state.currency;
+    sel.innerHTML = CURRENCIES.map(c =>
+      `<option value="${c.code}" ${c.code === cur ? "selected" : ""}>${c.code}</option>`
+    ).join("");
+  });
+}
+
+// Get converted amount to base currency (simplified: 1:1 if same, else show badge)
+const EXCHANGE_RATES = {
+  TRY: 1, USD: 38.5, EUR: 41.2, GBP: 48.3, JPY: 0.26,
+  CHF: 42.8, CAD: 28.1, AUD: 24.7, SAR: 10.3
+};
+
+function toBaseCurrency(amount, fromCurrency) {
+  const base = state.currency || "TRY";
+  if (fromCurrency === base) return amount;
+  const inTRY = amount * (EXCHANGE_RATES[fromCurrency] || 1);
+  return inTRY / (EXCHANGE_RATES[base] || 1);
+}
+
+// Patch submitTx to include txCurrency
+function submitTx() {
+  const noteVal = document.getElementById("fNote")?.value.trim() || "";
+  const txCur = document.getElementById("fTxCurrency")?.value || state.currency;
+  const desc = document.getElementById("fDesc").value.trim();
+  const amount = parseFloat(document.getElementById("fAmount").value);
+  const date = document.getElementById("fDate").value;
+  const cat = document.getElementById("fCat").value;
+  const rawTags = document.getElementById("fTags").value;
+
+  if (!state.cats.length) return toast(T("addCatFirst"), "error");
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+
+  const tags = rawTags.split(",").map(t => t.trim()).filter(Boolean);
+  const au = getActiveUser();
+  const isInst = document.getElementById("fInstall").checked;
+  const isRecur = document.getElementById("fRecurring").checked;
+  const convertedAmount = toBaseCurrency(amount, txCur);
+
+  if (state.currentType === "EXPENSE" && isInst) {
+    const count = parseInt(document.getElementById("instRange").value);
+    const perMonth = +(convertedAmount / count).toFixed(2);
+    const origPerMonth = +(amount / count).toFixed(2);
+    const start = new Date(date);
+    for (let i = 0; i < count; i++) {
+      const d = new Date(start.getFullYear(), start.getMonth() + i, start.getDate());
+      state.txs.push({ id: uid(), desc: `${desc} (${i+1}/${count})`, amount: perMonth,
+        origAmount: origPerMonth, txCurrency: txCur,
+        date: d.toISOString().split("T")[0], category: cat, type: "EXPENSE",
+        userId: au.id, owner: au.name, tags, note: noteVal, isInstallment: true });
+    }
+    toast(`${count} ${T("instAddedTxt")}`, "success");
+  } else if (isRecur) {
+    const period = document.getElementById("recurPeriod").value;
+    const endDateVal = document.getElementById("recurEnd").value;
+    const endDate = endDateVal ? new Date(endDateVal) : null;
+    const start = new Date(date);
+    let count = 0, d = new Date(start);
+    while (count < 120) {
+      if (endDate && d > endDate) break;
+      state.txs.push({ id: uid(), desc, amount: convertedAmount, origAmount: amount, txCurrency: txCur,
+        date: d.toISOString().split("T")[0], category: cat, type: state.currentType,
+        userId: au.id, owner: au.name, tags, note: noteVal, isRecurring: true, recurPeriod: period });
+      count++;
+      if (!endDate && count >= 12) break;
+      if (period === "monthly") d = new Date(d.getFullYear(), d.getMonth()+1, d.getDate());
+      else if (period === "weekly") d = new Date(d.getTime() + 7*86400000);
+      else if (period === "yearly") d = new Date(d.getFullYear()+1, d.getMonth(), d.getDate());
+    }
+    toast(`${count} ${T("recurAddedTxt")}`, "success");
+  } else {
+    state.txs.push({ id: uid(), desc, amount: convertedAmount, origAmount: amount, txCurrency: txCur,
+      date, category: cat, type: state.currentType,
+      userId: au.id, owner: au.name, tags, note: noteVal });
+    toast(T("savedOk"), "success");
+  }
+  saveState();
+  document.getElementById("fNote").value = "";
+  clearForm(); renderAll();
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+// Patch sheet submit to include txCurrency
+function submitSheetTx() {
+  const desc = document.getElementById("shDesc").value.trim();
+  const amount = parseFloat(document.getElementById("shAmount").value);
+  const date = document.getElementById("shDate").value;
+  const cat = document.getElementById("shCat").value;
+  const tags = document.getElementById("shTags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const note = document.getElementById("shNote")?.value.trim() || "";
+  const txCur = document.getElementById("shTxCurrency")?.value || state.currency;
+  const type = document.getElementById("shExpBtn").classList.contains("active") ? "EXPENSE" : "INCOME";
+
+  if (!state.cats.length) return toast(T("addCatFirst"), "error");
+  if (!desc || !amount || amount <= 0 || !date || !cat) return toast(T("fillFields"), "error");
+
+  const au = getActiveUser();
+  const convertedAmount = toBaseCurrency(amount, txCur);
+  state.txs.push({ id: uid(), desc, amount: convertedAmount, origAmount: amount, txCurrency: txCur,
+    date, category: cat, type, userId: au.id, owner: au.name, tags, note });
+  saveState(); renderAll(); closeAddSheet(); toast(T("savedOk"), "success");
+  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+  checkBudgetAlert(cat); checkMonthlyGoalAlert();
+}
+
+// Show original currency badge in tx list
+
+// ─────────────────────────────────────────────────
+// ANOMALY DETECTION
+// ─────────────────────────────────────────────────
+function detectAnomalies() {
+  const banner = document.getElementById("anomalyBanner");
+  const list = document.getElementById("anomalyList");
+  if (!banner || !list) return;
+
+  const monthly = currentMonthTxs();
+  const expenses = monthly.filter(t => t.type === "EXPENSE");
+  if (!expenses.length) { banner.classList.remove("show"); return; }
+
+  // Build 3-month average per category
+  const anomalies = [];
+  state.cats.forEach(cat => {
+    const thisMonthSpent = expenses.filter(t => t.category === cat.name).reduce((s,t) => s+t.amount, 0);
+    if (thisMonthSpent === 0) return;
+
+    let prevTotal = 0, prevMonths = 0;
+    for (let i = 1; i <= 3; i++) {
+      const d = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - i, 1);
+      const prevTxs = getMonthTxs(state.activeId, d.getFullYear(), d.getMonth());
+      const prevSpent = prevTxs.filter(t => t.type === "EXPENSE" && t.category === cat.name).reduce((s,t) => s+t.amount, 0);
+      if (prevSpent > 0) { prevTotal += prevSpent; prevMonths++; }
+    }
+    if (prevMonths === 0) return;
+
+    const avg = prevTotal / prevMonths;
+    const pctChange = ((thisMonthSpent - avg) / avg) * 100;
+    if (pctChange > 50) {
+      anomalies.push({ cat: cat.name, color: cat.color, thisMonth: thisMonthSpent, avg, pct: Math.round(pctChange) });
+    }
+  });
+
+  if (!anomalies.length) { banner.classList.remove("show"); return; }
+
+  banner.classList.add("show");
+  list.innerHTML = anomalies.sort((a,b) => b.pct - a.pct).map(a => `
+    <div class="anomaly-item">
+      <div class="anomaly-item-left">
+        <span style="width:8px;height:8px;border-radius:50%;background:${a.color};display:inline-block;flex-shrink:0;"></span>
+        <span style="font-weight:600;">${a.cat}</span>
+        <span style="color:var(--muted);font-size:12px;">${fmt(a.thisMonth)} (ort: ${fmt(a.avg)})</span>
+      </div>
+      <span class="anomaly-pct">+%${a.pct}</span>
+    </div>`).join("");
+}
+
+// ─────────────────────────────────────────────────
+// SHARE & IMPORT
+// ─────────────────────────────────────────────────
+let _shareCodeStr = "";
+
+function generateShareCode(mode) {
+  const monthly = mode === "month" ? currentMonthTxs() : state.txs.filter(t => t.userId === state.activeId);
+  const data = {
+    v: 1, type: "butce-share", user: getActiveUser().name,
+    cats: state.cats, txs: monthly,
+    exportedAt: new Date().toISOString(),
+    month: mode === "month" ? `${state.currentDate.getFullYear()}-${state.currentDate.getMonth()+1}` : "all"
+  };
+  _shareCodeStr = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+  const box = document.getElementById("shareCodeBox");
+  const actions = document.getElementById("shareActions");
+  if (box) { box.style.display = ""; box.textContent = _shareCodeStr.slice(0, 200) + "..."; }
+  if (actions) actions.style.display = "";
+  toast(mode === "month" ? "Paylaşım kodu oluşturuldu ✓" : "Tüm veriler koda eklendi ✓", "success");
+}
+
+function copyShareCode() {
+  if (!_shareCodeStr) return;
+  navigator.clipboard?.writeText(_shareCodeStr).then(() => toast("Kod kopyalandı ✓", "success"))
+    .catch(() => {
+      const ta = document.createElement("textarea");
+      ta.value = _shareCodeStr; document.body.appendChild(ta); ta.select();
+      document.execCommand("copy"); document.body.removeChild(ta);
+      toast("Kod kopyalandı ✓", "success");
+    });
+}
+
+function shareViaWebShare() {
+  if (!_shareCodeStr) return;
+  if (navigator.share) {
+    navigator.share({ title: "BütçeDostu Verisi", text: _shareCodeStr })
+      .catch(() => copyShareCode());
+  } else { copyShareCode(); }
+}
+
+function importFromCode() {
+  const raw = document.getElementById("importCodeInput")?.value.trim();
+  if (!raw) return toast("Önce paylaşım kodunu yapıştır.", "error");
+  try {
+    const data = JSON.parse(decodeURIComponent(escape(atob(raw))));
+    if (data.type !== "butce-share") return toast("Geçersiz kod.", "error");
+    _applySharedData(data);
+  } catch(e) { toast("Geçersiz kod. Tekrar kontrol et.", "error"); }
+}
+
+function _applySharedData(data) {
+  const msg = state.lang === "tr"
+    ? `"${data.user}" adlı kullanıcıdan ${data.txs?.length || 0} işlem ve ${data.cats?.length || 0} kategori aktarılacak. Mevcut kategoriler korunur. Devam?`
+    : `Import ${data.txs?.length || 0} transactions and ${data.cats?.length || 0} categories from "${data.user}"? Existing data kept.`;
+  if (!confirm(msg)) return;
+
+  // Merge categories
+  if (data.cats) {
+    data.cats.forEach(c => {
+      if (!state.cats.find(sc => sc.name === c.name)) state.cats.push(c);
+    });
+  }
+  // Merge transactions under active user
+  if (data.txs) {
+    const au = getActiveUser();
+    data.txs.forEach(tx => {
+      if (!state.txs.find(t => t.id === tx.id)) {
+        state.txs.push({ ...tx, userId: au.id, owner: au.name });
+      }
+    });
+  }
+  saveState(); renderAll(); closeModal("shareModal");
+  toast(`${data.txs?.length || 0} işlem aktarıldı ✓`, "success");
+}
+
+// Drag-drop import
+(function() {
+  const drop = document.getElementById("importDrop");
+  const fileIn = document.getElementById("importDropFile");
+  if (!drop || !fileIn) return;
+
+  drop.addEventListener("dragover", e => { e.preventDefault(); drop.classList.add("drag-over"); });
+  drop.addEventListener("dragleave", () => drop.classList.remove("drag-over"));
+  drop.addEventListener("drop", e => {
+    e.preventDefault(); drop.classList.remove("drag-over");
+    const file = e.dataTransfer.files[0];
+    if (file) readImportFile(file);
+  });
+  fileIn.addEventListener("change", e => { if (e.target.files[0]) readImportFile(e.target.files[0]); e.target.value = ""; });
+
+  function readImportFile(file) {
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const data = JSON.parse(ev.target.result);
+        // Support both share format and regular backup format
+        if (data.type === "butce-share") { _applySharedData(data); return; }
+        if (data.users && data.transactions && data.customCategories) {
+          if (!confirm(T("overwriteConfirm"))) return;
+          state.users = data.users; state.txs = data.transactions; state.cats = data.customCategories;
+          state.activeId = data.activeUserId || data.users[0]?.id;
+          saveState(); renderAll(); closeModal("shareModal"); toast(T("importedOk"), "success");
+        } else { toast(T("invalidFile"), "error"); }
+      } catch { toast(T("invalidFile"), "error"); }
+    };
+    reader.readAsText(file);
+  }
+})();
+
+// Mobile share button in settings page
+function updateShareModalMobBtn() {
+  // Nothing to do — handled by onclick in HTML
+}
+
+// ─────────────────────────────────────────────────
+// ADD SHARE BUTTON TO MOBILE SETTINGS PAGE
+// ─────────────────────────────────────────────────
+(function addShareToMobSettings() {
+  const mobSettings = document.getElementById("mob-settings-page");
+  if (!mobSettings) return;
+  const existing = mobSettings.querySelector("[data-share-btn]");
+  if (existing) return;
+  const sec = document.createElement("div");
+  sec.className = "settings-section";
+  sec.setAttribute("data-share-btn","1");
+  sec.innerHTML = `<div class="settings-section-title">👥 Paylaş & İçe Aktar</div>
+    <button class="icon-btn" style="width:100%;" onclick="openModal('shareModal')">👥 Paylaş / Veri Al</button>`;
+  const firstSection = mobSettings.querySelector(".settings-section");
+  if (firstSection) firstSection.before(sec);
+})();
+
 </script>
 </body>
 </html>
