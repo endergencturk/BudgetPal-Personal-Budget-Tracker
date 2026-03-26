@@ -821,10 +821,123 @@
       transition: all 0.15s;
     }
     .reminder-del:hover { background: var(--red-bg); color: var(--red); }
+
+    /* ─── REPORT PAGE ─── */
+    .report-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 18px; }
+    .report-kpi {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow-sm);
+      position: relative; overflow: hidden;
+    }
+    .report-kpi-icon { font-size: 26px; margin-bottom: 8px; }
+    .report-kpi-val { font-size: 22px; font-weight: 800; font-family: var(--mono); letter-spacing:-0.5px; }
+    .report-kpi-lbl { font-size: 11px; color: var(--muted); margin-top: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+    .report-kpi-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; }
+    .report-section { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow-sm); margin-bottom: 14px; }
+    .report-section-title { font-size: 15px; font-weight: 700; margin-bottom: 14px; }
+    .report-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .report-table th { text-align: left; padding: 8px 10px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); border-bottom: 1px solid var(--border); }
+    .report-table td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+    .report-table tr:last-child td { border-bottom: none; }
+    .report-table tr:hover td { background: var(--card2); }
+    .trend-chip { display: inline-flex; align-items: center; gap: 3px; font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; }
+
+    /* ─── BUDGET PLANNING ─── */
+    .plan-summary {
+      background: linear-gradient(135deg, #0d1117, #1a2235); color: white;
+      border-radius: var(--radius); padding: 16px 20px; margin-bottom: 14px;
+      display: grid; grid-template-columns: repeat(3,1fr); gap: 12px;
+    }
+    body.dark .plan-summary { background: linear-gradient(135deg, #060a12, #0d1628); }
+    .plan-sum-val { font-size: 18px; font-weight: 800; font-family: var(--mono); text-align: center; }
+    .plan-sum-lbl { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 3px; text-align: center; }
+    .plan-grid { display: grid; gap: 8px; }
+    .plan-row {
+      display: grid; grid-template-columns: 1fr 110px 70px; gap: 10px; align-items: center;
+      background: var(--card2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 10px 14px;
+    }
+    .plan-row-name { font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+    .plan-row-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+    .plan-input {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 8px; padding: 7px 10px; font-size: 13px;
+      color: var(--text); font-family: var(--mono); outline: none;
+      transition: border-color 0.2s; text-align: right; width: 100%;
+    }
+    .plan-input:focus { border-color: var(--accent); }
+    .plan-diff { font-size: 12px; font-weight: 700; font-family: var(--mono); text-align: right; }
+
+    /* ─── PIN LOCK ─── */
+    .pin-overlay {
+      display: none; position: fixed; inset: 0; z-index: 9999;
+      background: var(--bg);
+      flex-direction: column; align-items: center; justify-content: center; gap: 20px;
+    }
+    .pin-overlay.show { display: flex; }
+    .pin-logo { font-size: 52px; }
+    .pin-title { font-size: 22px; font-weight: 800; color: var(--text); margin: 0; }
+    .pin-subtitle { font-size: 13px; color: var(--muted); margin: -12px 0 0; }
+    .pin-dots { display: flex; gap: 14px; }
+    .pin-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--border2); background: transparent; transition: all 0.15s; }
+    .pin-dot.filled { background: var(--accent); border-color: var(--accent); transform: scale(1.15); }
+    .pin-dot.error { background: var(--red); border-color: var(--red); animation: pinshake 0.35s ease; }
+    @keyframes pinshake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-7px)} 75%{transform:translateX(7px)} }
+    .pin-pad { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; width: 248px; }
+    .pin-btn {
+      height: 64px; border-radius: var(--radius-sm); border: 1px solid var(--border);
+      background: var(--card); color: var(--text); font-family: var(--font);
+      font-size: 22px; font-weight: 700; cursor: pointer; transition: all 0.1s;
+      box-shadow: var(--shadow-sm); -webkit-tap-highlight-color: transparent;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .pin-btn:active { transform: scale(0.91); background: var(--accent); color: white; border-color: transparent; }
+    .pin-btn.del { font-size: 17px; color: var(--muted); }
+    .pin-error-msg { font-size: 13px; color: var(--red); font-weight: 600; min-height: 18px; text-align: center; }
+    .pin-forgot { font-size: 12px; color: var(--muted); cursor: pointer; text-decoration: underline; }
+
+    @media (max-width: 768px) {
+      .report-grid { grid-template-columns: 1fr 1fr; }
+      .plan-row { grid-template-columns: 1fr 90px 60px; }
+    }
+    @media (max-width: 480px) {
+      .report-grid { grid-template-columns: 1fr; }
+      .plan-row { grid-template-columns: 1fr; }
+      .plan-diff { text-align: left; }
+    }
   </style>
 </head>
 <body>
 <div id="toastContainer" class="toast-container"></div>
+
+<!-- PIN LOCK OVERLAY -->
+<div class="pin-overlay" id="pinOverlay">
+  <div class="pin-logo">💰</div>
+  <h2 class="pin-title">BütçeDostu</h2>
+  <p class="pin-subtitle" id="pinSubtitle">PIN kodunu gir</p>
+  <div class="pin-dots" id="pinDots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+  </div>
+  <div class="pin-error-msg" id="pinErrorMsg"></div>
+  <div class="pin-pad">
+    <button class="pin-btn" onclick="pinPress('1')">1</button>
+    <button class="pin-btn" onclick="pinPress('2')">2</button>
+    <button class="pin-btn" onclick="pinPress('3')">3</button>
+    <button class="pin-btn" onclick="pinPress('4')">4</button>
+    <button class="pin-btn" onclick="pinPress('5')">5</button>
+    <button class="pin-btn" onclick="pinPress('6')">6</button>
+    <button class="pin-btn" onclick="pinPress('7')">7</button>
+    <button class="pin-btn" onclick="pinPress('8')">8</button>
+    <button class="pin-btn" onclick="pinPress('9')">9</button>
+    <button class="pin-btn" style="opacity:0;" disabled></button>
+    <button class="pin-btn" onclick="pinPress('0')">0</button>
+    <button class="pin-btn del" onclick="pinDel()">⌫</button>
+  </div>
+  <span class="pin-forgot" onclick="pinForgot()">PIN'i unuttum</span>
+</div>
 
 <!-- PWA INSTALL BANNER -->
 <div class="pwa-banner" id="pwaBanner">
@@ -911,6 +1024,10 @@
     <button class="bnav-item" data-page="analysis" onclick="switchMobPage('analysis',this)">
       <div class="bnav-icon">📈</div>
       <span class="bnav-label" id="bnavAnalysis">Analiz</span>
+    </button>
+    <button class="bnav-item" data-page="report" onclick="switchMobPage('report',this)">
+      <div class="bnav-icon">📑</div>
+      <span class="bnav-label" id="bnavReport">Rapor</span>
     </button>
     <button class="bnav-item" data-page="settings-page" onclick="switchMobPage('settings-page',this)">
       <div class="bnav-icon">⚙️</div>
@@ -1007,6 +1124,13 @@
     </div>
 
     <div class="settings-section">
+      <div class="settings-section-title">🔐 PIN Koruması</div>
+      <button class="icon-btn" style="width:100%;" onclick="closeModal('settingsModal');openPINSettings()" id="pinSettingsBtn">
+        🔐 PIN Ayarla
+      </button>
+    </div>
+
+    <div class="settings-section">
       <div class="settings-section-title" id="labelExport">Dışa Aktar</div>
       <div class="export-grid">
         <button class="export-btn" onclick="exportJSON()">📄 JSON</button>
@@ -1083,6 +1207,8 @@
             <span class="month-label" id="monthLabel">—</span>
             <button onclick="changeMonth(1)">›</button>
           </div>
+          <button class="icon-btn" onclick="switchDesktopPage('report')" id="reportBtn">📑 Rapor</button>
+          <button class="icon-btn" onclick="switchDesktopPage('plan')" id="planBtn">🗓 Plan</button>
           <button class="icon-btn" onclick="openModal('remindersModal')" style="position:relative;" title="Hatırlatıcılar">
             🔔 <span id="notifBellBadge" class="notif-badge" style="display:none;">!</span>
           </button>
@@ -1405,6 +1531,57 @@
         </div>
       </div><!-- /mob-settings-page -->
 
+      <!-- ── MOB PAGE: REPORT ── -->
+      <div class="mob-page" id="mob-report">
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header">
+            <span class="card-title">📑 Finansal Özet Raporu</span>
+            <select id="reportRangeSelect" class="form-input" style="width:auto;padding:5px 10px;font-size:12px;" onchange="renderReportPage()">
+              <option value="1">Bu Ay</option>
+              <option value="3">Son 3 Ay</option>
+              <option value="6" selected>Son 6 Ay</option>
+              <option value="12">Son 12 Ay</option>
+            </select>
+          </div>
+          <div class="report-grid" id="reportKPIs"></div>
+        </div>
+        <div class="report-section">
+          <div class="report-section-title">📊 Kategori Dağılımı</div>
+          <table class="report-table" id="reportCatTable">
+            <thead><tr><th>Kategori</th><th>Toplam</th><th>Ort/Ay</th><th>Pay</th></tr></thead>
+            <tbody id="reportCatBody"></tbody>
+          </table>
+        </div>
+        <div class="report-section">
+          <div class="report-section-title">📅 Aylık Özet</div>
+          <table class="report-table">
+            <thead><tr><th>Ay</th><th>Gelir</th><th>Gider</th><th>Net</th><th>Trend</th></tr></thead>
+            <tbody id="reportMonthBody"></tbody>
+          </table>
+        </div>
+        <div style="margin-top:4px;">
+          <button class="btn btn-primary" onclick="exportPDF()" style="max-width:300px;">📕 PDF Olarak İndir</button>
+        </div>
+      </div><!-- /mob-report -->
+
+      <!-- ── MOB PAGE: BUDGET PLANNING ── -->
+      <div class="mob-page" id="mob-plan">
+        <div class="plan-summary" id="planSummary">
+          <div><div class="plan-sum-val" id="planTotalBudget">₺0</div><div class="plan-sum-lbl">Toplam Bütçe</div></div>
+          <div><div class="plan-sum-val" id="planTotalSpent">₺0</div><div class="plan-sum-lbl">Harcanan</div></div>
+          <div><div class="plan-sum-val" id="planTotalLeft">₺0</div><div class="plan-sum-lbl">Kalan</div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px;">
+          <div class="card-header">
+            <span class="card-title">🗓 Bütçe Planlaması</span>
+            <span class="card-badge" id="planMonthLabel">—</span>
+          </div>
+          <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">Her kategori için gelecek aya ait bütçe hedefi belirle.</p>
+          <div class="plan-grid" id="planGrid"></div>
+          <button class="btn btn-primary" style="margin-top:14px;" onclick="saveBudgetPlan()">💾 Planı Kaydet</button>
+        </div>
+      </div><!-- /mob-plan -->
+
     </div>
   </main>
 </div>
@@ -1550,10 +1727,14 @@ let state = {
   currency: ls("bd_currency", "TRY"),
   budgetGoals: ls("bd_goals", {}),
   reminders: ls("bd_reminders", []),
+  budgetPlans: ls("bd_plans", {}),   // { userId_YYYY-MM: { catName: amount } }
+  pin: ls("bd_pin", null),           // hashed PIN or null
+  pinEnabled: ls("bd_pin_enabled", false),
   currentDate: new Date(),
   editId: null,
   currentType: "EXPENSE",
   searchText: "",
+  locked: false,
 };
 
 // Ensure activeId valid
@@ -1616,6 +1797,9 @@ function saveState() {
   ss("bd_currency", state.currency);
   ss("bd_goals", state.budgetGoals);
   ss("bd_reminders", state.reminders);
+  ss("bd_plans", state.budgetPlans);
+  ss("bd_pin", state.pin);
+  ss("bd_pin_enabled", state.pinEnabled);
 }
 
 // ─────────────────────────────────────────────────
@@ -2417,27 +2601,43 @@ function switchMobPage(page, btn) {
 
   // Smooth scroll to top
   window.scrollTo({ top: 0, behavior: "smooth" });
+
+  // Render new pages if needed
+  if (page === "report") setTimeout(renderReportPage, 60);
+  if (page === "plan") setTimeout(renderPlanPage, 60);
 }
 
 function applyMobPageVisibility() {
   const mobile = isMobile();
-  const pages = ["overview", "transactions", "analysis", "settings-page"];
+  const allPages = ["overview", "transactions", "analysis", "settings-page", "report", "plan"];
 
   if (!mobile) {
-    // ── DESKTOP: show everything except mobile-only settings page ──
-    pages.forEach(p => {
+    // ── DESKTOP: report/plan toggle via _activeDesktopExtra, others always shown ──
+    allPages.forEach(p => {
       const el = document.getElementById(`mob-${p}`);
-      if (el) el.style.display = (p === "settings-page") ? "none" : "";
+      if (!el) return;
+      if (p === "settings-page") {
+        el.style.display = "none";
+      } else if (p === "report" || p === "plan") {
+        el.style.display = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === p) ? "" : "none";
+      } else {
+        el.style.display = (typeof _activeDesktopExtra === "undefined" || _activeDesktopExtra === null) ? "" : "none";
+      }
     });
     const ac = document.getElementById("mob-analysis-cat");
-    if (ac) ac.style.display = "";
+    if (ac) ac.style.display = (typeof _activeDesktopExtra === "undefined" || _activeDesktopExtra === null) ? "" : "none";
     const fab = document.getElementById("fabBtn");
     if (fab) fab.style.display = "none";
+    // Highlight active desktop nav buttons
+    const reportBtn = document.getElementById("reportBtn");
+    const planBtn = document.getElementById("planBtn");
+    if (reportBtn) { reportBtn.style.background = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "report") ? "var(--accent)" : ""; reportBtn.style.color = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "report") ? "white" : ""; }
+    if (planBtn) { planBtn.style.background = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "plan") ? "var(--accent)" : ""; planBtn.style.color = (typeof _activeDesktopExtra !== "undefined" && _activeDesktopExtra === "plan") ? "white" : ""; }
     return;
   }
 
   // ── MOBILE: only active page visible ──
-  pages.forEach(p => {
+  allPages.forEach(p => {
     const el = document.getElementById(`mob-${p}`);
     if (el) el.style.display = (p === activeMobPage) ? "block" : "none";
   });
@@ -2640,6 +2840,14 @@ function renderAll() {
     const btn = document.getElementById('notifPermBtn');
     if (btn && Notification.permission === 'granted') btn.textContent = '✅ İzin Verildi';
   }
+
+  // PIN settings button label
+  const pinBtn = document.getElementById('pinSettingsBtn');
+  if (pinBtn) pinBtn.textContent = (state.pinEnabled && state.pin) ? '🔐 PIN Kaldır / Değiştir' : '🔐 PIN Ayarla';
+
+  // Render report/plan pages if currently visible
+  renderReportPage();
+  renderPlanPage();
 
   // Sync bottom sheet cat select
   const shCat = document.getElementById("shCat");
@@ -3105,6 +3313,394 @@ setInterval(checkDueReminders, 60000);
 // ─────────────────────────────────────────────────
 
 // ─────────────────────────────────────────────────
+// FINANCIAL REPORT PAGE
+// ─────────────────────────────────────────────────
+function renderReportPage() {
+  const el = document.getElementById("mob-report");
+  if (!el || el.style.display === "none") return;
+
+  const rangeEl = document.getElementById("reportRangeSelect");
+  const months = rangeEl ? parseInt(rangeEl.value) || 6 : 6;
+
+  // Build array of { year, month } for last N months (newest last)
+  const monthList = [];
+  for (let i = months - 1; i >= 0; i--) {
+    const d = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() - i, 1);
+    monthList.push({ year: d.getFullYear(), month: d.getMonth(), date: d });
+  }
+
+  // Gather txs per month
+  const monthData = monthList.map(m => {
+    const txs = getMonthTxs(state.activeId, m.year, m.month);
+    const income = txs.filter(t => t.type === "INCOME").reduce((s, t) => s + t.amount, 0);
+    const expense = txs.filter(t => t.type === "EXPENSE").reduce((s, t) => s + t.amount, 0);
+    return { ...m, txs, income, expense, net: income - expense };
+  });
+
+  const totalIncome = monthData.reduce((s, m) => s + m.income, 0);
+  const totalExpense = monthData.reduce((s, m) => s + m.expense, 0);
+  const netBalance = totalIncome - totalExpense;
+  const savingRate = totalIncome > 0 ? Math.round(((totalIncome - totalExpense) / totalIncome) * 100) : 0;
+
+  // Highest expense month
+  const maxExpMonth = monthData.reduce((best, m) => m.expense > best.expense ? m : best, monthData[0] || { expense: 0, date: new Date() });
+  const maxExpMonthLabel = maxExpMonth && maxExpMonth.date ? maxExpMonth.date.toLocaleDateString(state.lang === "tr" ? "tr-TR" : "en-US", { month: "short", year: "2-digit" }) : "—";
+
+  const avgMonthlyExpense = months > 0 ? totalExpense / months : 0;
+
+  // ── KPI cards ──
+  const kpiBox = document.getElementById("reportKPIs");
+  if (kpiBox) {
+    const kpis = [
+      { icon: "💰", val: fmt(totalIncome), lbl: state.lang === "tr" ? "Toplam Gelir" : "Total Income", color: "var(--green)" },
+      { icon: "💸", val: fmt(totalExpense), lbl: state.lang === "tr" ? "Toplam Gider" : "Total Expense", color: "var(--red)" },
+      { icon: "📊", val: fmt(netBalance), lbl: state.lang === "tr" ? "Net Bakiye" : "Net Balance", color: netBalance >= 0 ? "var(--accent)" : "var(--red)" },
+      { icon: "🎯", val: `%${savingRate}`, lbl: state.lang === "tr" ? "Tasarruf Oranı" : "Saving Rate", color: savingRate >= 20 ? "var(--green)" : savingRate >= 0 ? "var(--amber)" : "var(--red)" },
+      { icon: "📅", val: maxExpMonthLabel, lbl: state.lang === "tr" ? "En Yüksek Gider Ayı" : "Highest Expense Month", color: "var(--amber)" },
+      { icon: "📉", val: fmt(avgMonthlyExpense), lbl: state.lang === "tr" ? "Aylık Ort. Gider" : "Avg Monthly Expense", color: "var(--purple)" },
+    ];
+    kpiBox.innerHTML = kpis.map(k => `
+      <div class="report-kpi">
+        <div class="report-kpi-icon">${k.icon}</div>
+        <div class="report-kpi-val" style="color:${k.color}">${k.val}</div>
+        <div class="report-kpi-lbl">${k.lbl}</div>
+        <div class="report-kpi-bar" style="background:${k.color};opacity:0.35;"></div>
+      </div>`).join("");
+  }
+
+  // ── Category table ──
+  const catBody = document.getElementById("reportCatBody");
+  if (catBody) {
+    const allExpTxs = monthData.flatMap(m => m.txs.filter(t => t.type === "EXPENSE"));
+    const grandExp = allExpTxs.reduce((s, t) => s + t.amount, 0);
+    const catMap = {};
+    allExpTxs.forEach(t => { catMap[t.category] = (catMap[t.category] || 0) + t.amount; });
+    const sorted = Object.entries(catMap).sort((a, b) => b[1] - a[1]);
+    if (!sorted.length) {
+      catBody.innerHTML = `<tr><td colspan="4" style="text-align:center;color:var(--muted);">${state.lang === "tr" ? "Veri yok" : "No data"}</td></tr>`;
+    } else {
+      catBody.innerHTML = sorted.map(([cat, total]) => {
+        const catObj = state.cats.find(c => c.name === cat);
+        const pct = grandExp > 0 ? ((total / grandExp) * 100).toFixed(1) : 0;
+        const avg = months > 0 ? total / months : 0;
+        return `<tr>
+          <td><span style="display:inline-flex;align-items:center;gap:6px;">
+            <span style="width:9px;height:9px;border-radius:50%;background:${catObj ? catObj.color : "var(--muted)"};display:inline-block;"></span>${cat}
+          </span></td>
+          <td style="font-family:var(--mono);font-weight:700;">${fmt(total)}</td>
+          <td style="font-family:var(--mono);color:var(--muted2);">${fmt(avg)}</td>
+          <td><span class="stat-pill pill-blue">%${pct}</span></td>
+        </tr>`;
+      }).join("");
+    }
+  }
+
+  // ── Monthly summary table ──
+  const monthBody = document.getElementById("reportMonthBody");
+  if (monthBody) {
+    monthBody.innerHTML = monthData.map((m, i) => {
+      const lbl = m.date.toLocaleDateString(state.lang === "tr" ? "tr-TR" : "en-US", { month: "short", year: "2-digit" });
+      const prev = monthData[i - 1];
+      let trendHtml = "";
+      if (prev) {
+        if (m.expense > prev.expense) trendHtml = `<span class="trend-chip" style="background:var(--red-bg);color:var(--red);">↑ ${state.lang === "tr" ? "arttı" : "up"}</span>`;
+        else if (m.expense < prev.expense) trendHtml = `<span class="trend-chip" style="background:var(--green-bg);color:var(--green);">↓ ${state.lang === "tr" ? "azaldı" : "down"}</span>`;
+        else trendHtml = `<span class="trend-chip" style="background:var(--card2);color:var(--muted);">= ${state.lang === "tr" ? "aynı" : "same"}</span>`;
+      }
+      const netColor = m.net >= 0 ? "var(--green)" : "var(--red)";
+      return `<tr>
+        <td style="font-weight:700;">${lbl}</td>
+        <td style="font-family:var(--mono);color:var(--green);">${fmt(m.income)}</td>
+        <td style="font-family:var(--mono);color:var(--red);">${fmt(m.expense)}</td>
+        <td style="font-family:var(--mono);font-weight:700;color:${netColor};">${fmt(m.net)}</td>
+        <td>${trendHtml}</td>
+      </tr>`;
+    }).join("");
+  }
+}
+
+// ─────────────────────────────────────────────────
+// BUDGET PLANNING PAGE
+// ─────────────────────────────────────────────────
+function planKey() {
+  const next = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1);
+  return `${state.activeId}_${next.getFullYear()}-${String(next.getMonth() + 1).padStart(2, "0")}`;
+}
+
+function renderPlanPage() {
+  const el = document.getElementById("mob-plan");
+  if (!el || el.style.display === "none") return;
+
+  const next = new Date(state.currentDate.getFullYear(), state.currentDate.getMonth() + 1, 1);
+  const nextLabel = next.toLocaleDateString(state.lang === "tr" ? "tr-TR" : "en-US", { month: "long", year: "numeric" });
+  const lblEl = document.getElementById("planMonthLabel");
+  if (lblEl) lblEl.textContent = nextLabel;
+
+  const key = planKey();
+  const savedPlan = state.budgetPlans[key] || {};
+
+  // Current month spending per category (for reference)
+  const currentExp = currentMonthTxs().filter(t => t.type === "EXPENSE");
+  const spentMap = {};
+  currentExp.forEach(t => { spentMap[t.category] = (spentMap[t.category] || 0) + t.amount; });
+
+  const grid = document.getElementById("planGrid");
+  if (!grid) return;
+
+  grid.innerHTML = state.cats.map(cat => {
+    const budgeted = savedPlan[cat.name] || 0;
+    const spent = spentMap[cat.name] || 0;
+    const diff = budgeted - spent;
+    const diffColor = diff >= 0 ? "var(--green)" : "var(--red)";
+    const diffText = budgeted > 0 ? fmt(diff) : "—";
+    return `<div class="plan-row">
+      <div>
+        <div class="plan-row-name">
+          <span style="width:9px;height:9px;border-radius:50%;background:${cat.color};display:inline-block;flex-shrink:0;"></span>
+          ${cat.name}
+        </div>
+        <div class="plan-row-sub">${state.lang === "tr" ? "Bu ay:" : "This month:"} ${fmt(spent)}</div>
+      </div>
+      <input type="number" class="plan-input" data-cat="${cat.name}" value="${budgeted || ""}" placeholder="₺0" min="0" step="1" />
+      <div class="plan-diff" style="color:${diffColor};">${diffText}</div>
+    </div>`;
+  }).join("");
+
+  _updatePlanSummary();
+}
+
+function _updatePlanSummary() {
+  const key = planKey();
+  const savedPlan = state.budgetPlans[key] || {};
+  const currentExp = currentMonthTxs().filter(t => t.type === "EXPENSE");
+  const spentMap = {};
+  currentExp.forEach(t => { spentMap[t.category] = (spentMap[t.category] || 0) + t.amount; });
+
+  const grid = document.getElementById("planGrid");
+  let totalBudget = 0, totalSpent = 0;
+  if (grid) {
+    grid.querySelectorAll(".plan-input").forEach(inp => {
+      const v = parseFloat(inp.value) || 0;
+      totalBudget += v;
+    });
+  } else {
+    Object.values(savedPlan).forEach(v => { totalBudget += parseFloat(v) || 0; });
+  }
+  Object.values(spentMap).forEach(v => { totalSpent += v; });
+
+  const totalLeft = totalBudget - totalSpent;
+  const tbEl = document.getElementById("planTotalBudget");
+  const tsEl = document.getElementById("planTotalSpent");
+  const tlEl = document.getElementById("planTotalLeft");
+  if (tbEl) tbEl.textContent = fmt(totalBudget);
+  if (tsEl) tsEl.textContent = fmt(totalSpent);
+  if (tlEl) { tlEl.textContent = fmt(totalLeft); tlEl.style.color = totalLeft >= 0 ? "white" : "var(--red)"; }
+}
+
+function saveBudgetPlan() {
+  const key = planKey();
+  const plan = {};
+  const grid = document.getElementById("planGrid");
+  if (!grid) return;
+  grid.querySelectorAll(".plan-input").forEach(inp => {
+    const cat = inp.dataset.cat;
+    const val = parseFloat(inp.value) || 0;
+    if (cat && val > 0) plan[cat] = val;
+  });
+  state.budgetPlans[key] = plan;
+  saveState();
+  _updatePlanSummary();
+  toast(state.lang === "tr" ? "Plan kaydedildi ✓" : "Plan saved ✓", "success");
+}
+
+// ─────────────────────────────────────────────────
+// PIN PROTECTION
+// ─────────────────────────────────────────────────
+let _pinBuffer = "";
+
+function hashPIN(pin) {
+  // Simple reversible-enough hash: btoa of char codes XORed with a constant
+  let result = 0;
+  for (let i = 0; i < pin.length; i++) result = (result * 31 + pin.charCodeAt(i)) >>> 0;
+  return result.toString(16);
+}
+
+function _updatePinDots() {
+  for (let i = 0; i < 4; i++) {
+    const dot = document.getElementById("pd" + i);
+    if (dot) {
+      dot.classList.toggle("filled", i < _pinBuffer.length);
+      dot.classList.remove("error");
+    }
+  }
+}
+
+function pinPress(digit) {
+  if (_pinBuffer.length >= 4) return;
+  _pinBuffer += digit;
+  _updatePinDots();
+  if (_pinBuffer.length === 4) {
+    setTimeout(() => {
+      if (hashPIN(_pinBuffer) === state.pin) {
+        unlockApp();
+      } else {
+        // Show error animation
+        for (let i = 0; i < 4; i++) {
+          const dot = document.getElementById("pd" + i);
+          if (dot) { dot.classList.remove("filled"); dot.classList.add("error"); }
+        }
+        const errEl = document.getElementById("pinErrorMsg");
+        if (errEl) errEl.textContent = state.lang === "tr" ? "Yanlış PIN, tekrar dene" : "Wrong PIN, try again";
+        setTimeout(() => {
+          _pinBuffer = "";
+          _updatePinDots();
+          const errEl2 = document.getElementById("pinErrorMsg");
+          if (errEl2) errEl2.textContent = "";
+        }, 900);
+      }
+    }, 120);
+  }
+}
+
+function pinDel() {
+  if (_pinBuffer.length > 0) {
+    _pinBuffer = _pinBuffer.slice(0, -1);
+    _updatePinDots();
+  }
+}
+
+function pinForgot() {
+  const msg = state.lang === "tr"
+    ? "PIN'i sıfırlamak için 'SIFIRLA' yazın:"
+    : "Type 'RESET' to clear your PIN:";
+  const answer = prompt(msg);
+  const expected = state.lang === "tr" ? "SIFIRLA" : "RESET";
+  if (answer && answer.trim().toUpperCase() === expected) {
+    state.pin = null;
+    state.pinEnabled = false;
+    state.locked = false;
+    saveState();
+    const overlay = document.getElementById("pinOverlay");
+    if (overlay) overlay.classList.remove("show");
+    toast(state.lang === "tr" ? "PIN kaldırıldı ✓" : "PIN removed ✓", "success");
+  }
+}
+
+function lockApp() {
+  state.locked = true;
+  _pinBuffer = "";
+  _updatePinDots();
+  const errEl = document.getElementById("pinErrorMsg");
+  if (errEl) errEl.textContent = "";
+  const overlay = document.getElementById("pinOverlay");
+  if (overlay) overlay.classList.add("show");
+}
+
+function unlockApp() {
+  state.locked = false;
+  _pinBuffer = "";
+  const overlay = document.getElementById("pinOverlay");
+  if (overlay) overlay.classList.remove("show");
+  _updatePinDots();
+}
+
+function openPINSettings() {
+  if (!state.pinEnabled || !state.pin) {
+    // Setup mode
+    const p1 = prompt(state.lang === "tr" ? "Yeni 4 haneli PIN girin:" : "Enter new 4-digit PIN:");
+    if (!p1 || !/^\d{4}$/.test(p1)) {
+      if (p1 !== null) toast(state.lang === "tr" ? "Geçersiz PIN. 4 rakam girin." : "Invalid PIN. Enter 4 digits.", "error");
+      return;
+    }
+    const p2 = prompt(state.lang === "tr" ? "PIN'i tekrar girin:" : "Confirm PIN:");
+    if (p2 !== p1) { toast(state.lang === "tr" ? "PIN'ler eşleşmiyor." : "PINs do not match.", "error"); return; }
+    state.pin = hashPIN(p1);
+    state.pinEnabled = true;
+    saveState();
+    const btn = document.getElementById("pinSettingsBtn");
+    if (btn) btn.textContent = "🔐 PIN Kaldır / Değiştir";
+    toast(state.lang === "tr" ? "PIN kuruldu ✓" : "PIN set ✓", "success");
+  } else {
+    // Change / disable mode
+    const action = prompt(state.lang === "tr"
+      ? "1 = PIN değiştir, 2 = PIN kaldır. Seçin (1/2):"
+      : "1 = Change PIN, 2 = Remove PIN. Choose (1/2):");
+    if (action === "1") {
+      const current = prompt(state.lang === "tr" ? "Mevcut PIN'i girin:" : "Enter current PIN:");
+      if (!current || hashPIN(current) !== state.pin) { toast(state.lang === "tr" ? "Yanlış mevcut PIN." : "Wrong current PIN.", "error"); return; }
+      const p1 = prompt(state.lang === "tr" ? "Yeni 4 haneli PIN girin:" : "Enter new 4-digit PIN:");
+      if (!p1 || !/^\d{4}$/.test(p1)) { if (p1 !== null) toast(state.lang === "tr" ? "Geçersiz PIN." : "Invalid PIN.", "error"); return; }
+      const p2 = prompt(state.lang === "tr" ? "Yeni PIN'i tekrar girin:" : "Confirm new PIN:");
+      if (p2 !== p1) { toast(state.lang === "tr" ? "PIN'ler eşleşmiyor." : "PINs do not match.", "error"); return; }
+      state.pin = hashPIN(p1);
+      saveState();
+      toast(state.lang === "tr" ? "PIN güncellendi ✓" : "PIN updated ✓", "success");
+    } else if (action === "2") {
+      state.pin = null;
+      state.pinEnabled = false;
+      saveState();
+      const btn = document.getElementById("pinSettingsBtn");
+      if (btn) btn.textContent = "🔐 PIN Ayarla";
+      toast(state.lang === "tr" ? "PIN kaldırıldı ✓" : "PIN removed ✓", "success");
+    }
+  }
+}
+
+// ─────────────────────────────────────────────────
+// DESKTOP PAGE SWITCHING (report / plan)
+// ─────────────────────────────────────────────────
+let _activeDesktopExtra = null; // "report" | "plan" | null
+
+function switchDesktopPage(page) {
+  if (_activeDesktopExtra === page) {
+    _activeDesktopExtra = null;
+  } else {
+    _activeDesktopExtra = page;
+  }
+  applyMobPageVisibility();
+  if (_activeDesktopExtra === "report") renderReportPage();
+  if (_activeDesktopExtra === "plan") renderPlanPage();
+}
+
+// ─────────────────────────────────────────────────
+// PAGE SWIPE — includes report & plan
+// ─────────────────────────────────────────────────
+(function() {
+  const swipePages = ["overview", "transactions", "analysis", "report", "settings-page"];
+  let _swStartX = 0, _swStartY = 0;
+
+  document.addEventListener("touchstart", e => {
+    _swStartX = e.touches[0].clientX;
+    _swStartY = e.touches[0].clientY;
+  }, { passive: true, capture: true });
+
+  document.addEventListener("touchend", e => {
+    if (!isMobile()) return;
+    if (document.getElementById("addSheet").classList.contains("open")) return;
+    if (document.getElementById("sidebar").classList.contains("open")) return;
+
+    const dx = _swStartX - e.changedTouches[0].clientX;
+    const dy = Math.abs(_swStartY - e.changedTouches[0].clientY);
+    if (Math.abs(dx) < 60 || dy > 80) return;
+
+    const idx = swipePages.indexOf(activeMobPage);
+    if (dx > 0 && idx < swipePages.length - 1) {
+      const np = swipePages[idx + 1];
+      const nb = document.querySelector(`[data-page="${np}"]`);
+      switchMobPage(np, nb);
+      if (np === "report") { setTimeout(renderReportPage, 80); }
+      if (np === "plan") { setTimeout(renderPlanPage, 80); }
+    } else if (dx < 0 && idx > 0) {
+      const pp = swipePages[idx - 1];
+      const pb = document.querySelector(`[data-page="${pp}"]`);
+      switchMobPage(pp, pb);
+      if (pp === "report") { setTimeout(renderReportPage, 80); }
+      if (pp === "plan") { setTimeout(renderPlanPage, 80); }
+    }
+  }, { passive: true, capture: true });
+})();
+
+// ─────────────────────────────────────────────────
 // INIT — new features
 // ─────────────────────────────────────────────────
 registerServiceWorker();
@@ -3133,6 +3729,11 @@ document.getElementById("fDate").value = new Date().toISOString().split("T")[0];
 document.getElementById("shDate").value = new Date().toISOString().split("T")[0];
 setType("EXPENSE");
 renderAll();
+
+// Show PIN lock on startup if enabled
+if (state.pinEnabled && state.pin) {
+  lockApp();
+}
 </script>
 </body>
 </html>
