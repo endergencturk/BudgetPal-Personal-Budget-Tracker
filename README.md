@@ -1,139 +1,118 @@
-# 💸 BütçeDostu — Kişisel Bütçe Takip Uygulaması
+# 💸 BudgetPal — Personal Budget Tracker
 
-Kişisel gelir ve giderleri kolayca yönetmek için geliştirilmiş, çok kullanıcılı bir bütçe takip web uygulaması. Sıfır bağımlılık, sıfır kurulum — tarayıcıda çalışır.
+A clean, fast, multi-user budget tracking web app. Zero dependencies, zero installation — runs entirely in your browser.
 
-🔗 **Demo:** [endergencturk.github.io/butce-takip-app](https://endergencturk.github.io/butce-takip-app/?v=2)
+🔗 **Live Demo:** [endergencturk.github.io/butce-takip-app](https://endergencturk.github.io/butce-takip-app/?v=2)
 
----
-
-## 📸 Ekran Görüntüleri
-
-![BütçeDostu Ana Ekran](https://github.com/user-attachments/assets/fe5713c4-bfd7-4ddc-bf88-8db38a45dbbc)
+💰 **Get it on Gumroad:** [Buy BudgetPal — $9 one-time](https://endergenctuerk.gumroad.com/l/kdjums)
 
 ---
 
-## 🚀 Özellikler
+## 📸 Screenshots
 
-### 👤 Kullanıcı Yönetimi
-- Çoklu kullanıcı desteği (ekleme, yeniden adlandırma, silme)
-- Her kullanıcıya özel veri, bütçe hedefleri ve PIN koruması
+![BudgetPal Main Screen](https://github.com/user-attachments/assets/fe5713c4-bfd7-4ddc-bf88-8db38a45dbbc)
 
-### 💰 İşlem Takibi
-- Gelir / gider ekleme ve düzenleme
-- **Not / yorum** ekleme her işleme
-- **Taksitli harcama** — tutar aylara otomatik bölünür (2–24 taksit)
-- **🔁 Tekrarlayan işlemler** — haftalık / aylık / yıllık, bitiş tarihi destekli
-- **💱 İşlem bazlı para birimi** — her işleme ayrı döviz seçimi, otomatik dönüşüm
-- Etiket sistemi ile işlemleri etiketle ve filtrele
+---
 
-### 📊 Analiz & Raporlama
-- Aylık gelir/gider özeti ve net bakiye
-- **📎 Aylık bütçe hedefi** — harcama hedefi belirle, progress bar ile takip et
-- **📑 Finansal Özet Raporu** — son 1/3/6/12 aya ait KPI'lar, kategori dağılımı, aylık trend
-- **🔍 Harcama anomali tespiti** — geçmiş 3 aya göre alışılmadık harcamaları otomatik yakalar
-- Kategori bazlı harcama analizi ve limit yönetimi
-- ⚠️ Limit uyarıları (%80 ve aşım bildirimi)
-- Günlük harcama trendi grafiği
-- 📊 Ay karşılaştırma grafiği — son 3 / 6 / 12 aya bak
-- Yıllık net bakiye analizi (aylık bazda)
+## 🚀 Features
 
-### 🗓 Bütçe Planlama
-- Bir sonraki ay için kategori bazlı bütçe planı oluştur
-- Bu ayki harcamalarla karşılaştır, farkı görsel olarak takip et
+### 👤 User Management
+- Multi-user support (add, rename, delete)
+- Each user has their own data, budget goals and PIN protection
 
-### 🎨 Kategori Yönetimi
-- Kategori ekleme, silme
-- 🎨 Özel renk seçici ile her kategoriye kendi rengi
-- Kategori bazlı bütçe limitleri
+### 💰 Transaction Tracking
+- Add and edit income / expense transactions
+- **Notes** on every transaction
+- **Installment payments** — amount split automatically across months (2–24 installments)
+- **🔁 Recurring transactions** — weekly / monthly / yearly, with optional end date
+- **💱 Per-transaction currency** — choose a different currency per transaction with automatic conversion
+- Tag system — label and filter transactions by tags
 
-### 👥 Paylaşım & İşbirliği
-- **Paylaşım kodu** — bütçe verisini base64 kodla arkadaşına gönder
-- **Web Share API** entegrasyonu — tek tuşla paylaş
-- **Sürükle-bırak JSON import** — arkadaşından gelen veriyi kolayca aktar
-- İçe aktarılan işlemler mevcut verilerle birleşir, üzerine yazmaz
+### 📊 Analysis & Reporting
+- Monthly income/expense summary and net balance
+- **📎 Monthly budget goal** — set a spending target, track progress with a progress bar
+- **📑 Financial Summary Report** — KPIs, category breakdown and monthly trends for last 1/3/6/12 months
+- **🔍 Spending anomaly detection** — automatically flags unusual expenses compared to your 3-month average
+- Category-based spending analysis with limit management
+- ⚠️ Limit alerts at 80% and on overspend
+- Daily spending trend chart
+- 📊 Month comparison chart — last 3 / 6 / 12 months
+- Yearly net balance analysis (month by month)
 
-### 📤 Export & Yedekleme
+### 🗓 Budget Planning
+- Build a category-based budget plan for next month
+- Compare with current month spending and track the difference visually
+
+### 🎨 Category Management
+- Add and delete categories
+- 🎨 Custom color picker for each category
+- Per-category budget limits
+
+### 👥 Sharing & Collaboration
+- **Share code** — export budget data as base64 and send to a friend
+- **Web Share API** integration — share with one tap
+- **Drag & drop JSON import** — easily import data from a friend
+- Imported transactions merge with existing data — no overwriting
+
+### 📤 Export & Backup
 - 📄 **JSON** export / import
-- 📊 **CSV** export (Excel uyumlu)
+- 📊 **CSV** export (Excel compatible)
 - 📗 **Excel (.xlsx)** export
-- 📕 **PDF Finansal Özet Raporu**
+- 📕 **PDF Financial Summary Report**
 
-### 🔔 Bildirim & Hatırlatıcı
-- Web Notifications API entegrasyonu
-- Başlık / tarih / saat / tekrar sıklığı ayarlanabilir hatırlatıcılar
-- Topbar'da yaklaşan hatırlatıcı sayacı
+### 🔔 Notifications & Reminders
+- Web Notifications API integration
+- Reminders with custom title / date / time / repeat frequency
+- Upcoming reminder counter in the top bar
 
-### 📱 Mobil Uygulama Deneyimi
-- **Bottom navigation** — 5 sekme: Özet / İşlemler / Analiz / Rapor / Ayarlar
-- **FAB butonu** — tek dokunuşla işlem ekleme
-- **Bottom sheet form** — yukarı sürgülü işlem ekleme paneli
-- **Swipe-to-delete** — işlemi sola kaydırarak sil
-- **Sayfa arası swipe** — parmakla sayfalar arası geçiş
-- **PWA** — ana ekrana eklenebilir, offline çalışır
+### 📱 Mobile App Experience
+- **Bottom navigation** — 5 tabs: Overview / Transactions / Analysis / Report / Settings
+- **FAB button** — add a transaction with one tap
+- **Bottom sheet form** — slide-up transaction panel
+- **Swipe to delete** — swipe left on any transaction
+- **Page swipe** — swipe between pages with your finger
+- **PWA** — installable on home screen, works offline
 
-### 🔐 Güvenlik
-- 4 haneli **PIN koruması** — uygulama açılışında otomatik kilit
-- PIN kurulum, değiştirme ve sıfırlama
+### 🔐 Security
+- 4-digit **PIN protection** — auto-lock on app open
+- PIN setup, change and reset
 
-### 🌍 Genel
-- 🌐 Türkçe / İngilizce dil desteği
+### 🌍 General
+- 🌐 4 languages: English, Turkish, German, Spanish
 - 🌙 Dark mode
-- **💱 9 para birimi:** TRY, USD, EUR, GBP, JPY, CHF, CAD, AUD, SAR
-- 💾 Tüm veriler `localStorage`'da saklanır, sunucu gerekmez
+- **💱 9 currencies:** TRY, USD, EUR, GBP, JPY, CHF, CAD, AUD, SAR
+- 💾 All data stored in `localStorage` — no server required
 
 ---
 
-## 🎯 Amaç
+## 🛠️ Technologies
 
-Bu proje:
-
-- Gerçek bir ihtiyaca çözüm üretmek
-- Frontend geliştirme becerilerini geliştirmek
-- Kullanıcı odaklı bir arayüz tasarlamak
-- Öğrenilen bilgileri gerçek bir ürüne dönüştürmek
-
-amacıyla geliştirilmiştir.
-
----
-
-## 🛠️ Teknolojiler
-
-| Teknoloji | Kullanım |
+| Technology | Usage |
 |---|---|
-| HTML / CSS / Vanilla JS | Uygulama temeli |
-| LocalStorage | Veri saklama |
-| [Chart.js](https://www.chartjs.org/) | Grafik ve görselleştirme |
-| [jsPDF](https://github.com/parallax/jsPDF) | PDF rapor oluşturma |
+| HTML / CSS / Vanilla JS | App foundation |
+| LocalStorage | Data storage |
+| [Chart.js](https://www.chartjs.org/) | Charts and visualizations |
+| [jsPDF](https://github.com/parallax/jsPDF) | PDF report generation |
 | [SheetJS (xlsx)](https://sheetjs.com/) | Excel export |
 | [Google Fonts](https://fonts.google.com/) | Plus Jakarta Sans, JetBrains Mono |
-| Web Notifications API | Hatırlatıcı bildirimleri |
-| Web Share API | Veri paylaşımı |
-| Service Worker | Offline PWA desteği |
+| Web Notifications API | Reminder notifications |
+| Web Share API | Data sharing |
+| Service Worker | Offline PWA support |
 
 ---
 
-## 📦 Kurulum
+## 📦 Installation
 
-Kurulum gerekmez. `index.html` dosyasını tarayıcıda aç, kullan.
+No installation needed. Open `index.html` in your browser and start using it.
 
 ```bash
 git clone https://github.com/endergencturk/butce-takip-app.git
 cd butce-takip-app
-# index.html dosyasını tarayıcıda aç
+# Open index.html in your browser
 ```
 
 ---
 
-## 📸 Ekran Görüntüsü GitHub'da Görünmüyorsa
-
-1. Repo'da herhangi bir **Issue** aç
-2. Ekran görüntüsünü yorum kutusuna **sürükle-bırak** yap
-3. GitHub otomatik URL üretir: `![image](https://github.com/user-attachments/assets/...)`
-4. Bu URL'yi README'deki `![...]()` içine yapıştır
-5. Issue'yu kaydetmeden kapat
-
----
-
-## 📄 Lisans
+## 📄 License
 
 MIT
